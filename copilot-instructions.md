@@ -51,3 +51,8 @@ Data storage:
 
 - I will store the raw data locally in a `data/raw/` directory, organized by username
   - I'm not attached to this; can use a different storage method if it makes sense
+
+
+Whatever you write, leave clear comments, xplain to me in detail, make variables for parameters that I might want to adjust rather than hard coding them. Make everything very obvious and readable as I'm new to Python, I come from web dev.
+
+Also, make everything strongly typed where at all possible. I want to be able to use intellisense autocomplete for fields on objects, for example.
