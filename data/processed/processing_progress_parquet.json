@@ -1,94 +1,100 @@
 {
   "last_batch_processed": 14,
-  "timestamp": "2025-08-22 15:40:37",
-  "num_players": 424507,
+  "timestamp": "2025-08-25 12:01:46",
+  "num_players": 253945,
   "config": {
     "parquet_path": "/Users/a/Documents/personalprojects/chess-opening-recommender/data/raw/train-00000-of-00072.parquet",
     "batch_size": 100000,
     "save_interval": 1,
     "save_dir": "../data/processed",
-    "min_elo": 1200,
+    "min_player_rating": 1200,
+    "max_elo_difference_between_players": 100,
+    "allowed_time_controls": [
+      "Blitz",
+      "Rapid",
+      "Classical"
+    ],
     "use_parallel": false,
     "num_processes": 1
   },
   "performance": {
     "total_games": 1394617,
-    "total_time_sec": 200.18906903266907,
-    "avg_batch_time_sec": 11.157198940004621,
-    "min_batch_time_sec": 9.78868579864502,
-    "max_batch_time_sec": 13.871840000152588,
+    "total_time_sec": 128.4145758152008,
+    "avg_batch_time_sec": 7.806627631187439,
+    "min_batch_time_sec": 6.79711389541626,
+    "max_batch_time_sec": 8.595341920852661,
     "avg_batch_size": 99615.5,
-    "overall_rate_games_per_sec": 6966.499253625137,
+    "overall_rate_games_per_sec": 10860.270270307705,
     "memory_usage": [
       {
-        "percent": 53.2,
-        "used_gb": 17.00937271118164,
-        "available_gb": 14.985210418701172
+        "percent": 35.3,
+        "used_gb": 11.300495147705078,
+        "available_gb": 20.697975158691406
       },
       {
-        "percent": 51.6,
-        "used_gb": 16.51207733154297,
-        "available_gb": 15.482738494873047
+        "percent": 36.9,
+        "used_gb": 11.814956665039062,
+        "available_gb": 20.182926177978516
       },
       {
-        "percent": 51.8,
-        "used_gb": 16.556827545166016,
-        "available_gb": 15.438167572021484
+        "percent": 35.7,
+        "used_gb": 11.420570373535156,
+        "available_gb": 20.576396942138672
       },
       {
-        "percent": 52.0,
-        "used_gb": 16.62615966796875,
-        "available_gb": 15.370452880859375
+        "percent": 35.5,
+        "used_gb": 11.346866607666016,
+        "available_gb": 20.650619506835938
       },
       {
-        "percent": 52.2,
-        "used_gb": 16.701141357421875,
-        "available_gb": 15.294513702392578
+        "percent": 35.8,
+        "used_gb": 11.457862854003906,
+        "available_gb": 20.539932250976562
       },
       {
-        "percent": 52.6,
-        "used_gb": 16.822994232177734,
-        "available_gb": 15.172466278076172
+        "percent": 36.4,
+        "used_gb": 11.639606475830078,
+        "available_gb": 20.356769561767578
       },
       {
-        "percent": 52.9,
-        "used_gb": 16.912799835205078,
-        "available_gb": 15.081794738769531
+        "percent": 36.0,
+        "used_gb": 11.515655517578125,
+        "available_gb": 20.48126220703125
       },
       {
-        "percent": 53.0,
-        "used_gb": 16.94599151611328,
-        "available_gb": 15.050411224365234
+        "percent": 36.3,
+        "used_gb": 11.614002227783203,
+        "available_gb": 20.383190155029297
       },
       {
-        "percent": 53.0,
-        "used_gb": 16.97119140625,
-        "available_gb": 15.02450180053711
+        "percent": 38.7,
+        "used_gb": 12.370391845703125,
+        "available_gb": 19.626522064208984
       },
       {
-        "percent": 53.3,
-        "used_gb": 17.037616729736328,
-        "available_gb": 14.957855224609375
+        "percent": 37.2,
+        "used_gb": 11.909721374511719,
+        "available_gb": 20.087890625
       },
       {
-        "percent": 54.1,
-        "used_gb": 17.293380737304688,
-        "available_gb": 14.70162582397461
+        "percent": 37.0,
+        "used_gb": 11.841064453125,
+        "available_gb": 20.156063079833984
       },
       {
-        "percent": 53.9,
-        "used_gb": 17.24588394165039,
-        "available_gb": 14.749252319335938
+        "percent": 37.6,
+        "used_gb": 12.01510238647461,
+        "available_gb": 19.981822967529297
       },
       {
-        "percent": 54.2,
-        "used_gb": 17.325157165527344,
-        "available_gb": 14.67007827758789
+        "percent": 37.2,
+        "used_gb": 11.886165618896484,
+        "available_gb": 20.110157012939453
       },
       {
-        "percent": 54.4,
-        "used_gb": 17.39908218383789,
-        "available_gb": 14.596519470214844
+        "percent": 37.4,
+        "used_gb": 11.951313018798828,
+        "available_gb": 20.0460205078125
       }
     ]
   }
