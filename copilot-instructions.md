@@ -52,7 +52,23 @@ Data storage:
 - I will store the raw data locally in a `data/raw/` directory, organized by username
   - I'm not attached to this; can use a different storage method if it makes sense
 
-
 Whatever you write, leave clear comments, xplain to me in detail, make variables for parameters that I might want to adjust rather than hard coding them. Make everything very obvious and readable as I'm new to Python, I come from web dev.
 
 Also, make everything strongly typed where at all possible. I want to be able to use intellisense autocomplete for fields on objects, for example.
+
+Documentation:
+In general, leave helpful comments explaining what you're doing and why, especially if it won't be obvious.
+At the top of a file, there should be general comments explaining the purpose of a file, when and where it's used etc. Formatted like this:
+
+# **\*\***\*\*\*\***\*\***\_\_\_**\*\***\*\*\*\***\*\***
+
+# This is the xyz file. It does abc. Blah blah blah
+
+# More info blah blah blah.
+
+# etc
+
+# **\*\***\*\*\*\***\*\***\_\_\_**\*\***\*\*\*\***\*\***
+
+Utils:
+I like utils files. As of 8.26.25, we've been piling stuff into all the same notebooks; let's start abstracting reusable logic out to utils where it's possible and makes sense.
