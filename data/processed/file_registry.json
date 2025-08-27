@@ -7,7 +7,7 @@
       "modified_time": 1756313851.43373,
       "modified_time_readable": "Wed Aug 27 12:57:31 2025",
       "header_hash": "5090c20a",
-      "processed_date": "2025-08-27 14:47:45"
+      "processed_date": "2025-08-27 15:47:36"
     },
     "train-00000-of-00066.parquet_1005085521_1756313838.996026_9b915b22": {
       "filename": "train-00000-of-00066.parquet",
@@ -16,7 +16,7 @@
       "modified_time": 1756313838.996026,
       "modified_time_readable": "Wed Aug 27 12:57:18 2025",
       "header_hash": "9b915b22",
-      "processed_date": "2025-08-27 14:47:49"
+      "processed_date": "2025-08-27 15:47:42"
     },
     "train-00000-of-00072.parquet_1006014154_1755889851.420854_6db45b02": {
       "filename": "train-00000-of-00072.parquet",
@@ -25,7 +25,7 @@
       "modified_time": 1755889851.420854,
       "modified_time_readable": "Fri Aug 22 15:10:51 2025",
       "header_hash": "6db45b02",
-      "processed_date": "2025-08-27 14:47:58"
+      "processed_date": "2025-08-27 15:47:49"
     },
     "train-00002-of-00066.parquet_1006184998_1756313860.5814483_573f3a83": {
       "filename": "train-00002-of-00066.parquet",
@@ -34,54 +34,9 @@
       "modified_time": 1756313860.5814483,
       "modified_time_readable": "Wed Aug 27 12:57:40 2025",
       "header_hash": "573f3a83",
-      "processed_date": "2025-08-27 14:48:05"
+      "processed_date": "2025-08-27 15:47:56"
     }
   },
-  "skipped_files": [
-    {
-      "filename": "train-00001-of-00066.parquet",
-      "full_path": "/Users/a/Documents/personalprojects/chess-opening-recommender/data/raw/train-00001-of-00066.parquet",
-      "size_bytes": 1014752436,
-      "modified_time": 1756313851.43373,
-      "modified_time_readable": "Wed Aug 27 12:57:31 2025",
-      "header_hash": "5090c20a",
-      "processed_date": "2025-08-27 14:49:11",
-      "skip_reason": "Already processed",
-      "skip_date": "2025-08-27 14:49:11"
-    },
-    {
-      "filename": "train-00000-of-00066.parquet",
-      "full_path": "/Users/a/Documents/personalprojects/chess-opening-recommender/data/raw/train-00000-of-00066.parquet",
-      "size_bytes": 1005085521,
-      "modified_time": 1756313838.996026,
-      "modified_time_readable": "Wed Aug 27 12:57:18 2025",
-      "header_hash": "9b915b22",
-      "processed_date": "2025-08-27 14:49:11",
-      "skip_reason": "Already processed",
-      "skip_date": "2025-08-27 14:49:11"
-    },
-    {
-      "filename": "train-00000-of-00072.parquet",
-      "full_path": "/Users/a/Documents/personalprojects/chess-opening-recommender/data/raw/train-00000-of-00072.parquet",
-      "size_bytes": 1006014154,
-      "modified_time": 1755889851.420854,
-      "modified_time_readable": "Fri Aug 22 15:10:51 2025",
-      "header_hash": "6db45b02",
-      "processed_date": "2025-08-27 14:49:11",
-      "skip_reason": "Already processed",
-      "skip_date": "2025-08-27 14:49:11"
-    },
-    {
-      "filename": "train-00002-of-00066.parquet",
-      "full_path": "/Users/a/Documents/personalprojects/chess-opening-recommender/data/raw/train-00002-of-00066.parquet",
-      "size_bytes": 1006184998,
-      "modified_time": 1756313860.5814483,
-      "modified_time_readable": "Wed Aug 27 12:57:40 2025",
-      "header_hash": "573f3a83",
-      "processed_date": "2025-08-27 14:49:11",
-      "skip_reason": "Already processed",
-      "skip_date": "2025-08-27 14:49:11"
-    }
-  ],
-  "last_updated": "2025-08-27 14:49:11"
+  "skipped_files": [],
+  "last_updated": "2025-08-27 15:47:56"
 }
