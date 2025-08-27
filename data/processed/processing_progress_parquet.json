@@ -1,0 +1,33 @@
+{
+  "last_batch_processed": 1,
+  "timestamp": "2025-08-27 14:48:05",
+  "num_players": 265830,
+  "config": {
+    "parquet_path": "/Users/a/Documents/personalprojects/chess-opening-recommender/data/raw/train-00002-of-00066.parquet",
+    "batch_size": 5750000,
+    "save_interval": 1,
+    "save_dir": "../data/processed",
+    "min_player_rating": 1200,
+    "max_elo_difference_between_players": 100,
+    "allowed_time_controls": [
+      "Blitz",
+      "Rapid",
+      "Classical"
+    ],
+    "use_parallel": false,
+    "num_processes": 1
+  },
+  "performance": {
+    "total_games": 0,
+    "total_time_sec": 1.9880499839782715,
+    "avg_batch_time_sec": 0,
+    "min_batch_time_sec": 0,
+    "max_batch_time_sec": 0,
+    "avg_batch_size": 0,
+    "overall_rate_games_per_sec": 0.0,
+    "memory_usage": [],
+    "accepted_games": 0,
+    "filtered_games": 0,
+    "acceptance_rate_percent": 0
+  }
+}
