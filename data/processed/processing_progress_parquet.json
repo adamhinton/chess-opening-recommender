@@ -1,100 +1,104 @@
 {
-	"last_batch_processed": 14,
-	"timestamp": "2025-08-25 12:14:13",
-	"num_players": 253945,
-	"config": {
-		"parquet_path": "/Users/a/Documents/personalprojects/chess-opening-recommender/data/raw/train-00000-of-00072.parquet",
-		"batch_size": 100000,
-		"save_interval": 1,
-		"save_dir": "../data/processed",
-		"min_player_rating": 1200,
-		"max_elo_difference_between_players": 100,
-		"allowed_time_controls": ["Blitz", "Rapid", "Classical"],
-		"use_parallel": false,
-		"num_processes": 1
-	},
-	"performance": {
-		"total_games": 1394617,
-		"total_time_sec": 135.64818716049194,
-		"avg_batch_time_sec": 8.237842031887599,
-		"min_batch_time_sec": 6.995931148529053,
-		"max_batch_time_sec": 11.062726974487305,
-		"avg_batch_size": 99615.5,
-		"overall_rate_games_per_sec": 10281.132606291016,
-		"memory_usage": [
-			{
-				"percent": 41.0,
-				"used_gb": 13.12386703491211,
-				"available_gb": 18.873287200927734
-			},
-			{
-				"percent": 39.9,
-				"used_gb": 12.775936126708984,
-				"available_gb": 19.221569061279297
-			},
-			{
-				"percent": 39.8,
-				"used_gb": 12.746936798095703,
-				"available_gb": 19.249984741210938
-			},
-			{
-				"percent": 40.1,
-				"used_gb": 12.827033996582031,
-				"available_gb": 19.170063018798828
-			},
-			{
-				"percent": 40.1,
-				"used_gb": 12.84072494506836,
-				"available_gb": 19.156272888183594
-			},
-			{
-				"percent": 40.1,
-				"used_gb": 12.823795318603516,
-				"available_gb": 19.17285919189453
-			},
-			{
-				"percent": 40.5,
-				"used_gb": 12.959980010986328,
-				"available_gb": 19.037681579589844
-			},
-			{
-				"percent": 41.3,
-				"used_gb": 13.20205307006836,
-				"available_gb": 18.794811248779297
-			},
-			{
-				"percent": 41.1,
-				"used_gb": 13.1588134765625,
-				"available_gb": 18.83850860595703
-			},
-			{
-				"percent": 41.2,
-				"used_gb": 13.180255889892578,
-				"available_gb": 18.817489624023438
-			},
-			{
-				"percent": 41.8,
-				"used_gb": 13.361701965332031,
-				"available_gb": 18.634918212890625
-			},
-			{
-				"percent": 41.7,
-				"used_gb": 13.328651428222656,
-				"available_gb": 18.668853759765625
-			},
-			{
-				"percent": 42.0,
-				"used_gb": 13.4364013671875,
-				"available_gb": 18.560264587402344
-			},
-			{
-				"percent": 42.1,
-				"used_gb": 13.465110778808594,
-				"available_gb": 18.53152084350586
-			}
-		],
-		"accepted_games": 633715,
-		"filtered_games": 760902,
-		"acceptance_rate_percent": 45.4
-	}
+  "last_batch_processed": 14,
+  "timestamp": "2025-08-26 10:40:32",
+  "num_players": 253945,
+  "config": {
+    "parquet_path": "/Users/a/Documents/personalprojects/chess-opening-recommender/data/raw/train-00000-of-00072.parquet",
+    "batch_size": 100000,
+    "save_interval": 1,
+    "save_dir": "../data/processed",
+    "min_player_rating": 1200,
+    "max_elo_difference_between_players": 100,
+    "allowed_time_controls": [
+      "Blitz",
+      "Rapid",
+      "Classical"
+    ],
+    "use_parallel": false,
+    "num_processes": 1
+  },
+  "performance": {
+    "total_games": 1394617,
+    "total_time_sec": 155.43670511245728,
+    "avg_batch_time_sec": 9.58426422732217,
+    "min_batch_time_sec": 8.26632285118103,
+    "max_batch_time_sec": 10.816442251205444,
+    "avg_batch_size": 99615.5,
+    "overall_rate_games_per_sec": 8972.250145105721,
+    "memory_usage": [
+      {
+        "percent": 40.0,
+        "used_gb": 12.809200286865234,
+        "available_gb": 19.188140869140625
+      },
+      {
+        "percent": 41.0,
+        "used_gb": 13.110836029052734,
+        "available_gb": 18.886661529541016
+      },
+      {
+        "percent": 41.2,
+        "used_gb": 13.190784454345703,
+        "available_gb": 18.806324005126953
+      },
+      {
+        "percent": 41.0,
+        "used_gb": 13.104106903076172,
+        "available_gb": 18.892929077148438
+      },
+      {
+        "percent": 41.0,
+        "used_gb": 13.127082824707031,
+        "available_gb": 18.87085723876953
+      },
+      {
+        "percent": 41.2,
+        "used_gb": 13.177101135253906,
+        "available_gb": 18.819881439208984
+      },
+      {
+        "percent": 41.4,
+        "used_gb": 13.234920501708984,
+        "available_gb": 18.763004302978516
+      },
+      {
+        "percent": 41.5,
+        "used_gb": 13.285228729248047,
+        "available_gb": 18.711978912353516
+      },
+      {
+        "percent": 41.7,
+        "used_gb": 13.338359832763672,
+        "available_gb": 18.658153533935547
+      },
+      {
+        "percent": 41.9,
+        "used_gb": 13.407573699951172,
+        "available_gb": 18.589561462402344
+      },
+      {
+        "percent": 42.1,
+        "used_gb": 13.464668273925781,
+        "available_gb": 18.53131866455078
+      },
+      {
+        "percent": 42.2,
+        "used_gb": 13.488334655761719,
+        "available_gb": 18.50933074951172
+      },
+      {
+        "percent": 42.2,
+        "used_gb": 13.514541625976562,
+        "available_gb": 18.481548309326172
+      },
+      {
+        "percent": 42.3,
+        "used_gb": 13.541015625,
+        "available_gb": 18.456523895263672
+      }
+    ],
+    "accepted_games": 633715,
+    "filtered_games": 760902,
+    "acceptance_rate_percent": 45.4
+  }
 }
