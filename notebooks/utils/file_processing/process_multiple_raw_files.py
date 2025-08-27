@@ -113,8 +113,9 @@ def process_directory(directory: Optional[str] = None) -> Dict[str, int]:
         registry = FileRegistry()
     except Exception as e:
         print(f"Error initializing file registry: {e}")
-        print("Continuing without duplicate detection")
-        registry = None
+        raise e(
+            "FileRegistry initialization failed. Dupe detection is required, so cannot continue."
+        )
 
     # Filter out already processed files
     new_files = []
