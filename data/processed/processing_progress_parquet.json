@@ -1,33 +1,39 @@
 {
   "last_batch_processed": 1,
-  "timestamp": "2025-08-27 15:47:56",
-  "num_players": 265830,
+  "timestamp": "2025-08-28 11:10:43",
+  "num_players": 576214,
   "config": {
     "parquet_path": "/Users/a/Documents/personalprojects/chess-opening-recommender/data/raw/train-00002-of-00066.parquet",
-    "batch_size": 5880000,
+    "batch_size": 6760000,
     "save_interval": 1,
     "save_dir": "../data/processed",
     "min_player_rating": 1200,
     "max_elo_difference_between_players": 100,
     "allowed_time_controls": [
       "Classical",
-      "Rapid",
-      "Blitz"
+      "Blitz",
+      "Rapid"
     ],
     "use_parallel": false,
     "num_processes": 1
   },
   "performance": {
-    "total_games": 0,
-    "total_time_sec": 1.9612720012664795,
-    "avg_batch_time_sec": 0,
-    "min_batch_time_sec": 0,
-    "max_batch_time_sec": 0,
-    "avg_batch_size": 0,
-    "overall_rate_games_per_sec": 0.0,
-    "memory_usage": [],
-    "accepted_games": 0,
-    "filtered_games": 0,
-    "acceptance_rate_percent": 0
+    "total_games": 1410497,
+    "total_time_sec": 117.1378800868988,
+    "avg_batch_time_sec": 103.10590314865112,
+    "min_batch_time_sec": 103.10590314865112,
+    "max_batch_time_sec": 103.10590314865112,
+    "avg_batch_size": 1410497.0,
+    "overall_rate_games_per_sec": 12041.33964993751,
+    "memory_usage": [
+      {
+        "percent": 46.0,
+        "used_gb": 14.72909927368164,
+        "available_gb": 17.267925262451172
+      }
+    ],
+    "accepted_games": 623590,
+    "filtered_games": 786907,
+    "acceptance_rate_percent": 44.2
   }
 }
