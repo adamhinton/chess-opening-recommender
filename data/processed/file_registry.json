@@ -107,6 +107,96 @@
       "modified_time_readable": "Wed Aug 27 14:52:29 2025",
       "header_hash": "0cc8cd69",
       "processed_date": "2025-08-29 12:41:13"
+    },
+    "train-00011-of-00066.parquet_1022163926_1756485812.339806_c482e762": {
+      "filename": "train-00011-of-00066.parquet",
+      "full_path": "/Users/a/Documents/personalprojects/chess-opening-recommender/data/raw/train-00011-of-00066.parquet",
+      "size_bytes": 1022163926,
+      "modified_time": 1756485812.339806,
+      "modified_time_readable": "Fri Aug 29 12:43:32 2025",
+      "header_hash": "c482e762",
+      "processed_date": "2025-08-29 12:55:34"
+    },
+    "train-00020-of-00066.parquet_1021653739_1756485900.9000175_4fe2d463": {
+      "filename": "train-00020-of-00066.parquet",
+      "full_path": "/Users/a/Documents/personalprojects/chess-opening-recommender/data/raw/train-00020-of-00066.parquet",
+      "size_bytes": 1021653739,
+      "modified_time": 1756485900.9000175,
+      "modified_time_readable": "Fri Aug 29 12:45:00 2025",
+      "header_hash": "4fe2d463",
+      "processed_date": "2025-08-29 12:58:50"
+    },
+    "train-00015-of-00066.parquet_1007746033_1756485883.036762_34dbfc71": {
+      "filename": "train-00015-of-00066.parquet",
+      "full_path": "/Users/a/Documents/personalprojects/chess-opening-recommender/data/raw/train-00015-of-00066.parquet",
+      "size_bytes": 1007746033,
+      "modified_time": 1756485883.036762,
+      "modified_time_readable": "Fri Aug 29 12:44:43 2025",
+      "header_hash": "34dbfc71",
+      "processed_date": "2025-08-29 13:02:08"
+    },
+    "train-00014-of-00066.parquet_1018864909_1756485876.2897716_b2cbfea8": {
+      "filename": "train-00014-of-00066.parquet",
+      "full_path": "/Users/a/Documents/personalprojects/chess-opening-recommender/data/raw/train-00014-of-00066.parquet",
+      "size_bytes": 1018864909,
+      "modified_time": 1756485876.2897716,
+      "modified_time_readable": "Fri Aug 29 12:44:36 2025",
+      "header_hash": "b2cbfea8",
+      "processed_date": "2025-08-29 13:05:34"
+    },
+    "train-00018-of-00066.parquet_1017727564_1756485898.8005824_782c910e": {
+      "filename": "train-00018-of-00066.parquet",
+      "full_path": "/Users/a/Documents/personalprojects/chess-opening-recommender/data/raw/train-00018-of-00066.parquet",
+      "size_bytes": 1017727564,
+      "modified_time": 1756485898.8005824,
+      "modified_time_readable": "Fri Aug 29 12:44:58 2025",
+      "header_hash": "782c910e",
+      "processed_date": "2025-08-29 13:08:56"
+    },
+    "train-00013-of-00066.parquet_1009185972_1756485860.6028283_4fbfb1f9": {
+      "filename": "train-00013-of-00066.parquet",
+      "full_path": "/Users/a/Documents/personalprojects/chess-opening-recommender/data/raw/train-00013-of-00066.parquet",
+      "size_bytes": 1009185972,
+      "modified_time": 1756485860.6028283,
+      "modified_time_readable": "Fri Aug 29 12:44:20 2025",
+      "header_hash": "4fbfb1f9",
+      "processed_date": "2025-08-29 13:12:25"
+    },
+    "train-00017-of-00066.parquet_1008980803_1756485895.201037_ddeba4c7": {
+      "filename": "train-00017-of-00066.parquet",
+      "full_path": "/Users/a/Documents/personalprojects/chess-opening-recommender/data/raw/train-00017-of-00066.parquet",
+      "size_bytes": 1008980803,
+      "modified_time": 1756485895.201037,
+      "modified_time_readable": "Fri Aug 29 12:44:55 2025",
+      "header_hash": "ddeba4c7",
+      "processed_date": "2025-08-29 13:15:52"
+    },
+    "train-00019-of-00066.parquet_1010683376_1756485900.21518_defc344e": {
+      "filename": "train-00019-of-00066.parquet",
+      "full_path": "/Users/a/Documents/personalprojects/chess-opening-recommender/data/raw/train-00019-of-00066.parquet",
+      "size_bytes": 1010683376,
+      "modified_time": 1756485900.21518,
+      "modified_time_readable": "Fri Aug 29 12:45:00 2025",
+      "header_hash": "defc344e",
+      "processed_date": "2025-08-29 13:19:22"
+    },
+    "train-00012-of-00066.parquet_1023018221_1756485841.5695968_86d66d8e": {
+      "filename": "train-00012-of-00066.parquet",
+      "full_path": "/Users/a/Documents/personalprojects/chess-opening-recommender/data/raw/train-00012-of-00066.parquet",
+      "size_bytes": 1023018221,
+      "modified_time": 1756485841.5695968,
+      "modified_time_readable": "Fri Aug 29 12:44:01 2025",
+      "header_hash": "86d66d8e",
+      "processed_date": "2025-08-29 13:23:00"
+    },
+    "train-00016-of-00066.parquet_1019204566_1756485892.3249943_9a394dfa": {
+      "filename": "train-00016-of-00066.parquet",
+      "full_path": "/Users/a/Documents/personalprojects/chess-opening-recommender/data/raw/train-00016-of-00066.parquet",
+      "size_bytes": 1019204566,
+      "modified_time": 1756485892.3249943,
+      "modified_time_readable": "Fri Aug 29 12:44:52 2025",
+      "header_hash": "9a394dfa",
+      "processed_date": "2025-08-29 13:27:01"
     }
   },
   "skipped_files": [
@@ -529,5 +619,5 @@
       "skip_date": "2025-08-29 12:52:24"
     }
   ],
-  "last_updated": "2025-08-29 12:52:24"
+  "last_updated": "2025-08-29 13:27:01"
 }
