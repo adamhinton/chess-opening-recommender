@@ -1,12 +1,13 @@
 """
 This module contains utility functions for interacting with the Hugging Face API and dataset viewer.
 Functions include fetching parquet URLs and filtering them based on specific criteria.
-HuggingFace has a repository of .parquet files - that is to say, massive datasets of Lichess games.
+HuggingFace has a repository of .parquet files - that is to say, 1GB datasets of Lichess games.
 """
 
 import requests
 import urllib.parse
 import re
+import urllib
 from typing import List
 
 

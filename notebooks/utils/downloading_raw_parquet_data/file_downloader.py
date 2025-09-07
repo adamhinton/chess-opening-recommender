@@ -1,7 +1,7 @@
 """
-This module contains utility functions for downloading files and probing fallback URLs.
+This module contains utility functions for downloading parquet files and probing fallback URLs.
 It includes logic for handling HTTP requests and saving files locally.
-HuggingFace has a repository of .parquet files - that is to say, massive datasets of Lichess games.
+HuggingFace has a repository of .parquet files - that is to say, 1GB datasets of Lichess games.
 """
 
 import requests
