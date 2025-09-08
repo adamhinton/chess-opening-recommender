@@ -2,7 +2,7 @@
 # This is types and classes for our raw-data processing pipeline.
 # __________________
 
-from typing import Dict, TypedDict, Optional, Union, Literal, Set, List
+from typing import Dict, TypedDict, Optional, Union, Literal, Set
 import time
 import psutil
 
