@@ -4,8 +4,8 @@ Functions include fetching parquet URLs and filtering them based on specific cri
 HuggingFace has a repository of .parquet files - that is to say, 1GB datasets of Lichess games.
 """
 
-import requests
 import urllib.parse
+import requests
 import re
 import urllib
 from typing import List
