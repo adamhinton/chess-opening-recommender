@@ -3,10 +3,23 @@
 # I'm scared to delete it tbh
 # TODO delete this if possible
 
-import pandas as pd
-import time
-from typing import Dict, Optional
-from notebooks.utils.file_processing.types_and_classes import (
+import sys
+from pathlib import Path
+
+# Determine paths to ensure imports work correctly
+current_file = Path.cwd()
+project_root = current_file.parent  # Move up to the project root
+
+# Add both to path to ensure imports work regardless of structure
+if str(current_file) not in sys.path:
+    sys.path.append(str(current_file))
+if str(project_root) not in sys.path:
+    sys.path.append(str(project_root))
+
+import pandas as pd  # noqa: E402
+import time  # noqa: E402
+from typing import Dict, Optional  # noqa: E402
+from notebooks.utils.file_processing.types_and_classes import (  # noqa: E402
     PlayerStats,
     ProcessingConfig,
     PerformanceTracker,
