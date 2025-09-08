@@ -62,6 +62,15 @@
       "modified_time_readable": "Sat Sep  6 12:46:09 2025",
       "header_hash": "9a394dfa",
       "processed_date": "2025-09-07 11:59:59"
+    },
+    "train-00011-of-00066.parquet_1022163926_1757177064.3766117_c482e762": {
+      "filename": "train-00011-of-00066.parquet",
+      "full_path": "/Users/a/Documents/personalprojects/chess-opening-recommender/data/raw/auto_download_parquets/train-00011-of-00066.parquet",
+      "size_bytes": 1022163926,
+      "modified_time": 1757177064.3766117,
+      "modified_time_readable": "Sat Sep  6 12:44:24 2025",
+      "header_hash": "c482e762",
+      "processed_date": "2025-09-08 12:01:23"
     }
   },
   "skipped_files": [
@@ -363,5 +372,5 @@
       "skip_date": "2025-09-07 20:54:44"
     }
   ],
-  "last_updated": "2025-09-07 20:54:44"
+  "last_updated": "2025-09-08 12:01:23"
 }
