@@ -109,8 +109,7 @@ def process_batch(
                 (batch_accepted / processed_so_far * 100) if processed_so_far > 0 else 0
             )
 
-            # Multi-file progress
-            multi_file_str = ""
+            # Enhanced multi-file progress logging
             if file_context:
                 files_remaining = (
                     file_context["total_files"] - file_context["current_file_num"]
@@ -137,15 +136,24 @@ def process_batch(
                     remaining_rows / overall_rate if overall_rate > 0 else 0
                 )
 
+                # Current file ETA
+                current_file_eta_seconds = eta if rate > 0 else 0
+
                 multi_file_str = (
                     f"File {file_context['current_file_num']}/{file_context['total_files']} "
-                    f"({files_remaining} left) - Total ETA: {total_eta_seconds / 60:.1f} min"
+                    f"({files_remaining} left) - File ETA: {current_file_eta_seconds / 60:.1f} min - "
+                    f"Total ETA: {total_eta_seconds / 60:.1f} min"
                 )
 
-            print(
-                f"Progress: {i+1:,}/{total_rows:,} ({(i+1)/total_rows*100:.1f}%) - "
-                f"Rate: {rate:.1f} games/sec - File ETA: {eta/60:.1f} min - {multi_file_str}"
-            )
+                print(
+                    f"Progress: {i+1:,}/{total_rows:,} ({(i+1)/total_rows*100:.1f}%) - "
+                    f"Rate: {rate:.1f} games/sec - {multi_file_str}"
+                )
+            else:
+                print(
+                    f"Progress: {i+1:,}/{total_rows:,} ({(i+1)/total_rows*100:.1f}%) - "
+                    f"Rate: {rate:.1f} games/sec"
+                )
             print(
                 f"Batch filtering: Accepted {batch_accepted:,}, Filtered {batch_filtered:,} (Acceptance rate: {acceptance_rate:.1f}%)"
             )
