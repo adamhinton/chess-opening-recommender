@@ -10,7 +10,6 @@ from pathlib import Path
 current_file = Path.cwd()
 project_root = current_file.parent  # Move up to the project root
 
-# Add both to path to ensure imports work regardless of structure
 if str(current_file) not in sys.path:
     sys.path.append(str(current_file))
 if str(project_root) not in sys.path:
