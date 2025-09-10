@@ -10,7 +10,8 @@
 # Note that the processor will check parquet files for dupes. If a file has already been processed, it will be skipped.
 # So you can just keep adding parquet files to the same directory and selecting that directory over and over again, and it's smart enough to skip files it has already processed.
 # This is a nice way to keep all your raw data in one place, and just keep adding to it over time.
-# _________________________________
+# ________________________________
+
 
 import os
 import sys
@@ -20,71 +21,11 @@ from typing import Dict, List, Optional, Set
 import tkinter as tk
 from tkinter import filedialog
 
-# Add the parent directory to the path to allow importing from other modules
 current_dir = Path(__file__).parent
 notebooks_dir = current_dir.parent.parent
 if str(notebooks_dir) not in sys.path:
     sys.path.append(str(notebooks_dir))
-
-# Try to import the FileRegistry
-try:
-    from notebooks.utils.file_processing.raw_data_file_dupe_checks import FileRegistry
-
-    print("Successfully imported FileRegistry")
-except ImportError:
-    print("Could not import FileRegistry - creating a simplified version")
-
-    # Implement a simplified version of FileRegistry if the real one can't be imported
-    class FileRegistry:
-        """Simplified version of FileRegistry to track processed files."""
-
-        def __init__(self):
-            self.registry_path = (
-                Path(notebooks_dir) / "data/processed/file_registry.json"
-            )
-            self.processed_files = set()
-            self._load_registry()
-
-        def _load_registry(self):
-            """Load the registry from disk if it exists."""
-            import json
-
-            if self.registry_path.exists():
-                try:
-                    with open(self.registry_path, "r") as f:
-                        registry_data = json.load(f)
-                        self.processed_files = set(
-                            registry_data.get("processed_files", [])
-                        )
-                except Exception as e:
-                    print(f"Warning: Could not load registry file: {e}")
-                    self.processed_files = set()
-
-        def _save_registry(self):
-            """Save the registry to disk."""
-            import json
-
-            try:
-                os.makedirs(self.registry_path.parent, exist_ok=True)
-                with open(self.registry_path, "w") as f:
-                    json.dump({"processed_files": list(self.processed_files)}, f)
-            except Exception as e:
-                print(f"Warning: Could not save registry file: {e}")
-
-        def is_file_processed(self, file_path: str) -> bool:
-            """Check if a file has been processed."""
-            return str(file_path) in self.processed_files
-
-        def mark_file_processed(self, file_path: str) -> None:
-            """Mark a file as processed."""
-            self.processed_files.add(str(file_path))
-            self._save_registry()
-
-        def mark_file_skipped(self, file_path: str) -> None:
-            """Mark a file as skipped."""
-            # For our purposes, skipped is the same as processed
-            self.processed_files.add(str(file_path))
-            self._save_registry()
+from utils.file_processing.raw_data_file_dupe_checks import FileRegistry
 
 
 def select_directory() -> Optional[str]:
@@ -273,9 +214,7 @@ def process_multiple_files(
     if allowed_time_controls is None:
         allowed_time_controls = {"Blitz", "Rapid", "Classical"}
 
-    print(
-        f"\nWill process {len(files_to_process)} files with the following parameters:"
-    )
+    print(f"\nWill process {files_to_process} files with the following parameters:")
     print(f"- Batch size: {batch_size:,}")
     print(f"- Min player rating: {min_player_rating}")
     print(f"- Max rating difference: {max_elo_difference}")
