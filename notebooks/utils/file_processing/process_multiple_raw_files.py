@@ -13,9 +13,7 @@
 # ________________________________
 
 
-import os
 import sys
-import time
 from pathlib import Path
 from typing import Dict, List, Optional, Set
 import tkinter as tk
@@ -25,7 +23,9 @@ current_dir = Path(__file__).parent
 notebooks_dir = current_dir.parent.parent
 if str(notebooks_dir) not in sys.path:
     sys.path.append(str(notebooks_dir))
-from utils.file_processing.raw_data_file_dupe_checks import FileRegistry
+from utils.file_processing.raw_data_file_dupe_checks import (  # noqa: E402
+    FileRegistry,
+)
 
 
 def select_directory() -> Optional[str]:
@@ -75,104 +75,17 @@ def find_parquet_files(directory: str) -> List[str]:
     return [str(p) for p in parquet_files]
 
 
-def process_directory(directory: Optional[str] = None) -> Dict[str, int]:
+def dummy_process_function(file_path: str, **kwargs) -> Dict:
     """
-    Process all parquet files in the specified directory.
-
-    Args:
-        directory: Path to directory containing parquet files (if None, will show picker)
-
-    Returns:
-        Dictionary with processing statistics
+    Dummy function to satisfy the process_function argument.
+    The actual processing is handled in the notebook.
     """
-    # Select directory if not provided
-    if directory is None:
-        directory = select_directory()
-        if directory is None:
-            print("No directory selected. Exiting.")
-            return {"error": 1}
-
-    # Find parquet files
-    parquet_files = find_parquet_files(directory)
-    if not parquet_files:
-        print(f"No parquet files found in {directory}")
-        return {"files_found": 0}
-
-    print(f"Found {len(parquet_files)} parquet files in {directory}")
-
-    # Initialize file registry for duplicate detection
-    try:
-        registry = FileRegistry()
-    except Exception as e:
-        print(f"Error initializing file registry: {e}")
-        print("Continuing without duplicate detection")
-        registry = None
-
-    # Filter out already processed files
-    new_files = []
-    skipped_files = []
-
-    for file_path in parquet_files:
-        if registry and registry.is_file_processed(file_path):
-            print(f"Skipping already processed file: {Path(file_path).name}")
-            skipped_files.append(file_path)
-            try:
-                registry.mark_file_skipped(file_path)
-            except Exception as e:
-                print(f"Warning: Could not mark file as skipped: {e}")
-        else:
-            new_files.append(file_path)
-
-    if not new_files:
-        print("No new files to process.")
-        return {
-            "files_found": len(parquet_files),
-            "files_skipped": len(skipped_files),
-            "files_processed": 0,
-        }
-
-    print(
-        f"Will process {len(new_files)} new files out of {len(parquet_files)} total files."
-    )
-
-    # Return the list of new files to process - the actual processing will be done in the notebook
-    return {
-        "directory": directory,
-        "files_found": len(parquet_files),
-        "files_skipped": len(skipped_files),
-        "files_to_process": new_files,
-    }
-
-
-def get_optimal_batch_size() -> int:
-    """
-    Calculate the optimal batch size based on available system memory.
-
-    Returns:
-        Recommended batch size (number of rows)
-    """
-    try:
-        import psutil
-
-        # Get available memory in GB
-        available_memory_gb = psutil.virtual_memory().available / (1024**3)
-
-        # Use 30% of available memory, assuming 1KB per row
-        memory_for_batch_gb = available_memory_gb * 0.3
-        optimal_batch_size = int(memory_for_batch_gb * 1024**3 / 1024)  # 1KB per row
-
-        # Round to nearest 10,000
-        optimal_batch_size = max(10_000, round(optimal_batch_size / 10_000) * 10_000)
-
-        return optimal_batch_size
-    except ImportError:
-        # Default batch size if psutil is not available
-        return 100_000
+    return {"processed_file": file_path}
 
 
 def process_multiple_files(
     directory: Optional[str] = None,
-    batch_size: Optional[int] = None,
+    batch_size: Optional[int] = 100_000,  # Default value
     min_player_rating: int = 1200,
     max_elo_difference: int = 100,
     allowed_time_controls: Optional[Set[str]] = None,
@@ -192,29 +105,47 @@ def process_multiple_files(
     Returns:
         Dictionary with processing statistics
     """
-    # Get directory and find files
-    result = process_directory(directory)
+    # Select directory if not provided
+    if directory is None:
+        directory = select_directory()
+        if directory is None:
+            print("No directory selected. Exiting.")
+            return {"error": 1}
 
-    if (
-        "error" in result
-        or "files_to_process" not in result
-        or not result["files_to_process"]
-    ):
-        print("No files to process. Exiting.")
-        return result
+    # Find parquet files
+    parquet_files = find_parquet_files(directory)
+    if not parquet_files:
+        print(f"No parquet files found in {directory}")
+        return {"files_found": 0}
 
-    files_to_process = result["files_to_process"]
+    print(f"Found {len(parquet_files)} parquet files in {directory}")
 
-    # Determine batch size if not provided
-    if batch_size is None:
-        batch_size = get_optimal_batch_size()
-        print(f"Using automatically determined batch size: {batch_size:,}")
+    # Use the utility function to filter out processed files
+    registry = FileRegistry()
+    all_files = [str(p) for p in parquet_files]
+
+    new_files = []
+    skipped_count = 0
+    for file_path in all_files:
+        if registry.is_file_processed(file_path):
+            registry.mark_file_skipped(file_path)
+            skipped_count += 1
+        else:
+            new_files.append(file_path)
+
+    if not new_files:
+        print("No new files to process.")
+        return {
+            "files_found": len(all_files),
+            "files_skipped": skipped_count,
+            "files_processed": 0,
+        }
 
     # Set default time controls if none provided
     if allowed_time_controls is None:
         allowed_time_controls = {"Blitz", "Rapid", "Classical"}
 
-    print(f"\nWill process {files_to_process} files with the following parameters:")
+    print(f"\nWill process {len(new_files)} files with the following parameters:")
     print(f"- Batch size: {batch_size:,}")
     print(f"- Min player rating: {min_player_rating}")
     print(f"- Max rating difference: {max_elo_difference}")
@@ -223,26 +154,25 @@ def process_multiple_files(
 
     # Return processing configuration for notebook to use
     return {
-        "files_to_process": files_to_process,
+        "files_to_process": new_files,
         "batch_size": batch_size,
         "min_player_rating": min_player_rating,
         "max_elo_difference": max_elo_difference,
         "allowed_time_controls": allowed_time_controls,
         "save_dir": save_dir,
-        "directory": result.get("directory", ""),
-        "files_found": result.get("files_found", 0),
-        "files_skipped": result.get("files_skipped", 0),
+        "directory": directory,
+        "files_found": len(all_files),
+        "files_skipped": skipped_count,
     }
 
 
 if __name__ == "__main__":
     # Example usage when run directly
-    result = process_directory()
-    print(f"Processing result: {result}")
+    config = process_multiple_files()
 
-    if "files_to_process" in result and result["files_to_process"]:
-        print("The following files would be processed:")
-        for file_path in result["files_to_process"]:
+    if "files_to_process" in config and config["files_to_process"]:
+        print("\nThe following files would be processed:")
+        for file_path in config["files_to_process"]:
             print(f"  - {Path(file_path).name}")
 
     print(
