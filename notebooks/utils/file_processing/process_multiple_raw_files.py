@@ -1,3 +1,6 @@
+# NOTE I think this entire file is deprecated; TODO delete it because we probably don't need it.
+# The pipeline is different now. We no longer process multiple files at a time. We download, process and delete one file at a time.
+
 # _________________________________
 # This util serves to process multiple raw files at once, rather than feeding them manually one by one.
 # Specifically, feeding raw parquet files from a directory, each containing millions of rows of games.
