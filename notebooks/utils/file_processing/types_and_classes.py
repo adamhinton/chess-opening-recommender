@@ -2,9 +2,10 @@
 # This is types and classes for our raw-data processing pipeline.
 # __________________
 
-from typing import Dict, TypedDict, Optional, Union, Literal, Set
+from typing import Dict, TypedDict, Optional, Union, Literal, Set, Any
 import time
 import psutil
+import copy
 
 # Define types for game results
 GameResult = Literal["1-0", "0-1", "1/2-1/2", "*"]
@@ -67,6 +68,20 @@ class ProcessingConfig:
             self.allowed_time_controls = {"Blitz", "Rapid", "Classical"}
         else:
             self.allowed_time_controls = allowed_time_controls
+
+    def replace(self, **kwargs: Any) -> "ProcessingConfig":
+        """Creates a new ProcessingConfig instance with updated attributes.
+        Useful for making carbon copies of config with slightly tweaked parameters for different files.
+        """
+        new_config = copy.copy(self)
+        for key, value in kwargs.items():
+            if hasattr(new_config, key):
+                setattr(new_config, key, value)
+            else:
+                raise AttributeError(
+                    f"'{type(self).__name__}' object has no attribute '{key}'"
+                )
+        return new_config
 
 
 class PerformanceTracker:

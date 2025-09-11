@@ -102,6 +102,7 @@ class FileRegistry:
         )
 
 
+# Probably deprecated; we download, process and delete files one at a time now.
 def process_multiple_files(
     file_paths: List[str],
     process_function,
