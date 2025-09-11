@@ -13,10 +13,9 @@
 """
 
 import json
-import hashlib
 import time
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any
 
 
 class FileRegistry:
