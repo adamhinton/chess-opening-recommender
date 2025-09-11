@@ -1,0 +1,52 @@
+{
+  "last_batch_processed": 4,
+  "timestamp": "2025-09-11 14:32:14",
+  "num_players": 553779,
+  "config": {
+    "parquet_path": "../data/raw/better_downloading_experiments/2025-03-train-00004-of-00069.parquet",
+    "batch_size": 400000,
+    "save_interval": 5,
+    "save_dir": "../data/processed",
+    "min_player_rating": 1200,
+    "max_elo_difference_between_players": 100,
+    "allowed_time_controls": [
+      "Blitz",
+      "Rapid",
+      "Classical"
+    ]
+  },
+  "performance": {
+    "total_games": 1413223,
+    "total_time_sec": 112.5418791770935,
+    "avg_batch_time_sec": 25.70119047164917,
+    "min_batch_time_sec": 14.54381775856018,
+    "max_batch_time_sec": 31.56148409843445,
+    "avg_batch_size": 353305.75,
+    "overall_rate_games_per_sec": 12557.307647015405,
+    "memory_usage": [
+      {
+        "percent": 54.3,
+        "used_gb": 17.358402252197266,
+        "available_gb": 14.635848999023438
+      },
+      {
+        "percent": 54.1,
+        "used_gb": 17.31191635131836,
+        "available_gb": 14.682369232177734
+      },
+      {
+        "percent": 54.0,
+        "used_gb": 17.261016845703125,
+        "available_gb": 14.73287582397461
+      },
+      {
+        "percent": 53.9,
+        "used_gb": 17.257694244384766,
+        "available_gb": 14.737495422363281
+      }
+    ],
+    "accepted_games": 621054,
+    "filtered_games": 792169,
+    "acceptance_rate_percent": 43.9
+  }
+}
