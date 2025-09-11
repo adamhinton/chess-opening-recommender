@@ -1,13 +1,14 @@
 import time
 from typing import Dict, Optional
 import duckdb
-from notebooks.utils.file_processing.types_and_classes import (
+from .types_and_classes import (
     ProcessingConfig,
     PlayerStats,
     PerformanceTracker,
 )
-from notebooks.utils.file_processing.process_batch import process_batch
-from notebooks.utils.file_processing.progress_tracking import (
+
+from .process_game_batch import process_batch
+from .save_and_load_progress import (
     load_progress,
     save_progress,
 )
