@@ -18,7 +18,7 @@ from pathlib import Path
 def process_parquet_file(
     config: ProcessingConfig,
     players_data: Dict[str, PlayerStats],
-    log_frequency: int = 5000,
+    log_frequency: int = 50_000,
     file_context: Optional[Dict] = None,
 ) -> bool:
     """

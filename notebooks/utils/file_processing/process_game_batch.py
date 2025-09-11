@@ -68,7 +68,7 @@ def process_batch(
     batch_df: pd.DataFrame,
     players_data: Dict[str, PlayerStats],
     config: ProcessingConfig,
-    log_frequency: int = 5000,
+    log_frequency: int = 50_000,
     perf_tracker: Optional[PerformanceTracker] = None,
     file_context: Optional[Dict] = None,
 ) -> None:
@@ -100,62 +100,20 @@ def process_batch(
         if (i + 1) % log_frequency == 0:
             elapsed = time.time() - start_time
             rate = (i + 1) / elapsed if elapsed > 0 else 0
-            eta = (total_rows - (i + 1)) / rate if rate > 0 else 0
-
-            # Calculate acceptance rate for this batch so far
-            processed_so_far = batch_accepted + batch_filtered
-            acceptance_rate = (
-                (batch_accepted / processed_so_far * 100) if processed_so_far > 0 else 0
-            )
-
-            # Enhanced multi-file progress logging
-            if file_context:
-                files_remaining = (
-                    file_context["total_files"] - file_context["current_file_num"]
-                )
-
-                # Estimate total progress
-                rows_done_in_prev_files = (
-                    file_context["current_file_num"] - 1
-                ) * file_context["avg_rows_per_file"]
-                rows_done_in_current_file = i + 1
-                total_rows_processed = (
-                    rows_done_in_prev_files + rows_done_in_current_file
-                )
-
-                total_elapsed = time.time() - file_context["total_start_time"]
-                overall_rate = (
-                    total_rows_processed / total_elapsed if total_elapsed > 0 else 0
-                )
-
-                remaining_rows = (
-                    file_context["total_rows_estimate"] - total_rows_processed
-                )
-                total_eta_seconds = (
-                    remaining_rows / overall_rate if overall_rate > 0 else 0
-                )
-
-                # Current file ETA
-                current_file_eta_seconds = eta if rate > 0 else 0
-
-                multi_file_str = (
-                    f"File {file_context['current_file_num']}/{file_context['total_files']} "
-                    f"({files_remaining} left) - File ETA: {current_file_eta_seconds / 60:.1f} min - "
-                    f"Total ETA: {total_eta_seconds / 60:.1f} min"
-                )
-
+            total_filtered = batch_filtered
+            total_accepted = batch_accepted
+            total_processed = total_accepted + total_filtered
+            if total_processed > 0:
+                acceptance_rate = (total_accepted / total_processed) * 100
                 print(
                     f"Progress: {i+1:,}/{total_rows:,} ({(i+1)/total_rows*100:.1f}%) - "
-                    f"Rate: {rate:.1f} games/sec - {multi_file_str}"
+                    f"Acceptance rate: {acceptance_rate:.1f}% - Rate: {rate:.1f} games/sec"
                 )
             else:
                 print(
                     f"Progress: {i+1:,}/{total_rows:,} ({(i+1)/total_rows*100:.1f}%) - "
                     f"Rate: {rate:.1f} games/sec"
                 )
-            print(
-                f"Batch filtering: Accepted {batch_accepted:,}, Filtered {batch_filtered:,} (Acceptance rate: {acceptance_rate:.1f}%)"
-            )
 
         # Filter out invalid games
         if not is_valid_game(game, config):
@@ -298,10 +256,14 @@ def process_batch(
     # Final progress update
     elapsed = time.time() - start_time
     rate = total_rows / elapsed if elapsed > 0 else 0
-    acceptance_rate = (batch_accepted / total_rows * 100) if total_rows > 0 else 0
-    print(
-        f"Completed {total_rows:,} games in {elapsed:.1f} seconds - Rate: {rate:.1f} games/sec"
-    )
-    print(
-        f"Batch filtering stats: Accepted {batch_accepted:,}, Filtered {batch_filtered:,} (Acceptance rate: {acceptance_rate:.1f}%)"
-    )
+    total_processed = batch_accepted + batch_filtered
+    if total_processed > 0:
+        acceptance_rate = (batch_accepted / total_processed) * 100
+        print(
+            f"Completed {total_rows:,} games in {elapsed:.1f} seconds - Rate: {rate:.1f} games/sec"
+        )
+        print(f"    Batch acceptance rate: {acceptance_rate:.1f}%")
+    else:
+        print(
+            f"Completed {total_rows:,} games in {elapsed:.1f} seconds - Rate: {rate:.1f} games/sec"
+        )
