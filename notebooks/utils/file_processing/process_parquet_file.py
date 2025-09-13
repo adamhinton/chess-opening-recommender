@@ -57,7 +57,7 @@ def process_parquet_file(
         # This avoids loading the whole file into memory.
         with duckdb.connect() as temp_con:
             total_rows = temp_con.execute(
-                f"SELECT COUNT(*) FROM '{config.parquet_path}'"
+                f"SELECT COUNT(*) FROM '{config.parquet_path}' WHERE ECO IS NOT NULL"
             ).fetchone()[0]
 
         if total_rows == 0:
@@ -81,7 +81,7 @@ def process_parquet_file(
 
             # Read a batch from the parquet file.
             # Excluding 'movetext' saves significant memory and processing time.
-            batch_query = f"SELECT * EXCLUDE(Site, UTCDate, UTCTime, movetext)FROM '{config.parquet_path}' LIMIT {config.batch_size} OFFSET {offset}"
+            batch_query = f"SELECT * EXCLUDE(Site, UTCDate, UTCTime, movetext) FROM '{config.parquet_path}' WHERE ECO IS NOT NULL LIMIT {config.batch_size} OFFSET {offset}"
 
             # We use a new connection for the read to avoid potential conflicts
             # with the main DB connection, though this is largely a precaution.
