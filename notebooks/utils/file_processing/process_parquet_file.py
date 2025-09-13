@@ -1,148 +1,117 @@
+# ----------------------------------------------------------------------------------
+# This module orchestrates the processing of a single, large parquet file
+# containing raw chess game data. It reads the file in manageable batches,
+# passes each batch to the processing function, and tracks overall progress.
+# The main goal is to process files that are too large to fit into memory
+# in a robust and efficient manner.
+# ----------------------------------------------------------------------------------
+
+import duckdb
 import time
 from typing import Dict, Optional
-import duckdb
-from .types_and_classes import (
+from pathlib import Path
+import sys
+
+# Ensure the project root is in the system path to allow for absolute imports.
+project_root = Path(__file__).resolve().parents[3]
+if str(project_root) not in sys.path:
+    sys.path.append(str(project_root))
+
+from notebooks.utils.file_processing.types_and_classes import (  # noqa: E402
     ProcessingConfig,
-    PlayerStats,
     PerformanceTracker,
 )
-
-from .process_game_batch import process_batch
-from .save_and_load_progress import (
-    load_progress,
-    save_progress,
-)
-from pathlib import Path
+from notebooks.utils.file_processing.process_game_batch import (
+    process_batch,
+)  # noqa: E402
+from notebooks.utils.database.db_utils import get_db_connection  # noqa: E402
 
 
 def process_parquet_file(
     config: ProcessingConfig,
-    players_data: Dict[str, PlayerStats],
-    log_frequency: int = 50_000,
     file_context: Optional[Dict] = None,
 ) -> bool:
     """
-    Process a single parquet file in batches, updating a shared players_data dictionary.
-    This function is a direct copy from 03_parquet_performance.ipynb.
+    Process a single parquet file in batches, saving the results to a DuckDB database.
+
+    This function reads a large parquet file chunk by chunk, handing off each
+    chunk to `process_batch` for filtering, analysis, and database insertion.
+    It manages the lifecycle of the database connection for the file and reports
+    detailed performance metrics upon completion.
 
     Args:
-        config: Processing configuration for this specific file.
-        players_data: The shared dictionary of player statistics to update.
-        log_frequency: How often to log progress within a batch.
-        file_context: Dictionary with context for multi-file processing.
+        config: The configuration object for this specific file processing job.
+        file_context: An optional dictionary containing context for multi-file
+                      processing runs, used for logging and ETA calculations.
 
     Returns:
-        True if processing was successful, False otherwise.
+        True if the file was processed successfully, False otherwise.
     """
+    db_con = None
     try:
-        # Initialize DuckDB connection
-        con = duckdb.connect()
-
-        # Reset progress file for a new run to avoid conflicts.
-        progress_path = Path(config.save_dir) / "processing_progress_parquet.json"
-        if progress_path.exists():
-            progress_path.unlink()
-
-        _, start_batch = load_progress(config)
+        # Establish a single database connection for the entire file.
+        db_con = get_db_connection(config.db_path)
         perf_tracker = PerformanceTracker()
 
-        total_rows = con.execute(
-            f"SELECT COUNT(*) FROM '{config.parquet_path}'"
-        ).fetchone()[0]
+        # Use a temporary DuckDB connection to get metadata about the file.
+        # This avoids loading the whole file into memory.
+        with duckdb.connect() as temp_con:
+            total_rows = temp_con.execute(
+                f"SELECT COUNT(*) FROM '{config.parquet_path}'"
+            ).fetchone()[0]
+
         if total_rows == 0:
             print("File is empty, skipping.")
-            return True  # Return True to allow deletion of empty file
+            return True  # Successfully "processed" an empty file.
 
         total_batches = (total_rows + config.batch_size - 1) // config.batch_size
         print(
-            f"Will process {total_rows:,} rows in {total_batches} batches of size {config.batch_size:,}"
+            f"Processing {total_rows:,} rows in {total_batches} batches of size {config.batch_size:,}"
         )
 
         file_start_time = time.time()
 
-        batch_num = start_batch
-        while batch_num * config.batch_size < total_rows:
+        for batch_num in range(total_batches):
             offset = batch_num * config.batch_size
 
-            # ETA calculations
-            if batch_num > start_batch:
-                batches_processed_this_file = batch_num - start_batch
-                time_elapsed_this_file = time.time() - file_start_time
-                avg_time_per_batch_this_file = (
-                    time_elapsed_this_file / batches_processed_this_file
-                )
-                batches_remaining_this_file = total_batches - batch_num
-                file_eta_seconds = (
-                    batches_remaining_this_file * avg_time_per_batch_this_file
-                )
-
-                if file_context:
-                    current_file_num = file_context.get("current_file_num", 1)
-                    total_files = file_context.get("total_files", 1)
-
-                    # Estimate total batches processed so far across all files
-                    # Assuming all files have similar number of batches
-                    total_batches_so_far = (
-                        (current_file_num - 1) * total_batches
-                    ) + batches_processed_this_file
-                    total_expected_batches = total_files * total_batches
-
-                    time_elapsed_total = time.time() - file_context.get(
-                        "total_start_time", file_start_time
-                    )
-                    avg_time_per_batch_total = time_elapsed_total / total_batches_so_far
-
-                    total_batches_remaining = (
-                        total_expected_batches - total_batches_so_far
-                    )
-                    total_eta_seconds = (
-                        total_batches_remaining * avg_time_per_batch_total
-                    )
-
-                    print(
-                        f"\n--- File {current_file_num}/{total_files} | Batch {batch_num + 1}/{total_batches} (Offset {offset:,}) ---"
-                    )
-                    print(
-                        f"    File ETA: {file_eta_seconds/60:.2f} mins | Total ETA: {total_eta_seconds/60:.2f} mins"
-                    )
-                else:
-                    print(
-                        f"\nProcessing batch {batch_num + 1}/{total_batches} (offset {offset:,})"
-                    )
-                    print(f"    File ETA: {file_eta_seconds/60:.2f} mins")
-
-            else:
-                print(
-                    f"\nProcessing batch {batch_num + 1}/{total_batches} (offset {offset:,})"
-                )
+            # Simple progress display for the current file
+            print(f"\n--- Starting Batch {batch_num + 1}/{total_batches} ---")
 
             perf_tracker.start_batch()
 
-            batch_query = f"SELECT * EXCLUDE(Site, UTCDate, UTCTime, movetext) FROM '{config.parquet_path}' LIMIT {config.batch_size} OFFSET {offset}"
-            batch_df = con.execute(batch_query).df()
+            # Read a batch from the parquet file.
+            # Excluding 'movetext' saves significant memory and processing time.
+            batch_query = f"SELECT * EXCLUDE movetext FROM '{config.parquet_path}' LIMIT {config.batch_size} OFFSET {offset}"
+
+            # We use a new connection for the read to avoid potential conflicts
+            # with the main DB connection, though this is largely a precaution.
+            with duckdb.connect() as read_con:
+                batch_df = read_con.execute(batch_query).df()
 
             if batch_df.empty:
-                break
+                print("    Skipping empty batch.")
+                continue
 
+            # Hand off the batch to the core processing function.
             process_batch(
-                batch_df,
-                players_data,
-                config,
-                log_frequency,
-                perf_tracker,
-                file_context,
+                batch_df=batch_df,
+                con=db_con,
+                config=config,
+                perf_tracker=perf_tracker,
             )
 
             batch_time = perf_tracker.end_batch(len(batch_df))
+            print(f"    Batch processed in {batch_time:.2f}s.")
+
+            # Log file-level ETA
+            batches_processed = batch_num + 1
+            time_elapsed = time.time() - file_start_time
+            avg_time_per_batch = time_elapsed / batches_processed
+            batches_remaining = total_batches - batches_processed
+            eta_seconds = batches_remaining * avg_time_per_batch
             print(
-                f"    Processed batch in {batch_time:.2f}s. Players: {len(players_data):,}"
+                f"    File ETA: {time.strftime('%H:%M:%S', time.gmtime(eta_seconds))}"
             )
-
-            batch_num += 1
-            if batch_num % config.save_interval == 0:
-                save_progress(players_data, batch_num, config, perf_tracker)
-
-        save_progress(players_data, batch_num, config, perf_tracker)
 
         summary = perf_tracker.get_summary()
         print("\nFile Processing Summary:")
@@ -152,7 +121,10 @@ def process_parquet_file(
         return True
     except Exception as e:
         print(f"An error occurred during file processing: {e}")
+        # Potentially log the error to a file or more robust logging system here.
         return False
     finally:
-        if "con" in locals():
-            con.close()
+        # Ensure the database connection is always closed.
+        if db_con:
+            db_con.close()
+            print("Database connection closed.")

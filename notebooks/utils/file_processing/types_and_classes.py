@@ -1,89 +1,92 @@
-# __________________
-# This is types and classes for our raw-data processing pipeline.
-# __________________
-
-from typing import Dict, TypedDict, Optional, Union, Literal, Set, Any
+# ----------------------------------------------------------------------------------
+# This file defines the configuration and performance tracking classes for the
+# raw data processing pipeline. It ensures a consistent and well-documented
+# structure for managing processing parameters.
+# ----------------------------------------------------------------------------------
 import time
 import psutil
 import copy
-
-# Define types for game results
-GameResult = Literal["1-0", "0-1", "1/2-1/2", "*"]
-
-
-class OpeningResults(TypedDict):
-    """Statistics for a player's results with a particular opening."""
-
-    opening_name: str
-    results: Dict[str, Union[int, float]]
-
-
-class PlayerStats(TypedDict):
-    """Statistics for an individual player."""
-
-    rating: int
-    title: Optional[
-        str
-    ]  # Checking for players with BOT in their name to filter out bot games
-    white_games: Dict[str, OpeningResults]  # ECO code -> results
-    black_games: Dict[str, OpeningResults]  # ECO code -> results
-    num_games_total: int
+from typing import Set, Any
+from pathlib import Path
 
 
 class ProcessingConfig:
-    """Configuration for the game processing pipeline.
-    Contains parameters for filtering games, batch processing, and parallelization.
-    This is designed to ensure that the processing of raw chess game data yields usable results efficiently.
+    """
+    Configuration for the game processing pipeline.
+
+    This class holds all the parameters that control the data processing workflow,
+    from file paths and batch sizes to the specific filters applied to chess games.
+    Using a class for configuration ensures that all parts of the pipeline access
+    parameters in a consistent, predictable, and well-documented way.
     """
 
     def __init__(
         self,
-        # Computer efficiency and organization stuff
+        # --- System & File Paths ---
         parquet_path: str,
+        db_path: str | Path,
         batch_size: int = 100_000,
-        save_interval: int = 1,
-        save_dir: str = "../data/processed",
-        # Chess game filtering stuff
-        # Neither the black or white player can be below this rating
+        # --- Chess Game Filters ---
+        # Players must have at least this rating to be included.
         min_player_rating: int = 1200,
-        # Players can't be more than 100 rating points apart
+        # The ELO rating difference between players cannot exceed this value.
         max_elo_difference_between_players: int = 100,
-        # Exclude bullet and daily games by default
-        allowed_time_controls: Optional[Set[str]] = None,
+        # A set of allowed time controls (e.g., "Blitz", "Rapid").
+        # Game "Event" names must contain one of these strings.
+        allowed_time_controls: Set[str] | None = None,
     ):
-        # Notes on game filters:
-        # Didn't exclude unrated games because our dataset contains only rated games.
-        # Also didn't have to filter out bot games, because only games between two humans are rated --- I think so, at least.
-        # See here to look at the data I used: https://huggingface.co/datasets/Lichess/standard-chess-games
+        """
+        Initializes the configuration object.
 
-        self.parquet_path = (
-            parquet_path  # Path to the Parquet file containing raw game data
-        )
+        Args:
+            parquet_path: The full path to the raw parquet file to be processed.
+            db_path: The path to the DuckDB database file where results will be stored.
+            batch_size: The number of games to process in a single in-memory batch.
+            min_player_rating: The minimum rating for both players in a game.
+            max_elo_difference_between_players: The maximum allowed rating difference.
+            allowed_time_controls: A set of strings for filtering game time controls.
+                                   If None, defaults to {"Blitz", "Rapid", "Classical"}.
+        """
+        # Notes on game filters:
+        # - Unrated games are not explicitly filtered, as the Lichess dataset primarily
+        #   contains rated games.
+        # - Bot games are filtered out within the processing logic by checking player titles.
+        #   See: https://huggingface.co/datasets/Lichess/standard-chess-games
+
+        self.parquet_path = parquet_path
+        self.db_path = Path(db_path)
         self.batch_size = batch_size
-        self.save_interval = save_interval
-        self.save_dir = save_dir  # Directory to save intermediate results
         self.min_player_rating = min_player_rating
         self.max_elo_difference_between_players = max_elo_difference_between_players
 
-        # Default to common time controls if none specified
-        # Exclude bullet and daily games because they're unrepresentative
+        # Default to common, competitive time controls if none are specified.
+        # This excludes "Bullet" and "Correspondence" (Daily), which can be less
+        # representative of standard opening theory application.
         if allowed_time_controls is None:
             self.allowed_time_controls = {"Blitz", "Rapid", "Classical"}
         else:
             self.allowed_time_controls = allowed_time_controls
 
     def replace(self, **kwargs: Any) -> "ProcessingConfig":
-        """Creates a new ProcessingConfig instance with updated attributes.
-        Useful for making carbon copies of config with slightly tweaked parameters for different files.
         """
+        Creates a new ProcessingConfig instance with updated attributes.
+
+        This is a convenience method to produce a modified copy of the configuration,
+        which is particularly useful when processing multiple files in a loop, as each
+        file requires its own `parquet_path`.
+
+        Example:
+            new_config = base_config.replace(parquet_path="path/to/new_file.parquet")
+
+        Returns:
+            A new ProcessingConfig instance with the specified attributes updated.
+        """
+        # Create a shallow copy of the current instance
         new_config = copy.copy(self)
+        # Update the attributes from the provided keyword arguments
         for key, value in kwargs.items():
             if hasattr(new_config, key):
                 setattr(new_config, key, value)
-            else:
-                raise AttributeError(
-                    f"'{type(self).__name__}' object has no attribute '{key}'"
-                )
         return new_config
 
 

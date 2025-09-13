@@ -1,25 +1,26 @@
-# This processes a batch of lichess games
-# I originally thought I was using this somewhere, but now I can't find where? I think I must have used it originally then refactored to not need it
-# I'm scared to delete it tbh
-# TODO delete this if possible
+# ----------------------------------------------------------------------------------
+# This module is responsible for processing a single batch of chess games. It
+# filters games based on defined criteria, extracts relevant information, and
+# efficiently updates a DuckDB database with player and opening statistics.
+# The key design goal is to perform these updates in a batched manner to
+# minimize database transactions and maximize throughput, which is critical
+# when processing billions of games.
+# ----------------------------------------------------------------------------------
 
+import pandas as pd
+import duckdb
+from collections import defaultdict
+from typing import Dict, Optional, Set, Tuple, List
 import sys
 from pathlib import Path
 
-# Determine paths to ensure imports work correctly
-current_file = Path.cwd()
-project_root = current_file.parent  # Move up to the project root
-
-if str(current_file) not in sys.path:
-    sys.path.append(str(current_file))
+# Ensure the project root is in the system path to allow for absolute imports.
+# This is crucial for making the script runnable from different locations.
+project_root = Path(__file__).resolve().parents[3]
 if str(project_root) not in sys.path:
     sys.path.append(str(project_root))
 
-import pandas as pd  # noqa: E402
-import time  # noqa: E402
-from typing import Dict, Optional  # noqa: E402
 from notebooks.utils.file_processing.types_and_classes import (  # noqa: E402
-    PlayerStats,
     ProcessingConfig,
     PerformanceTracker,
 )
@@ -27,255 +28,223 @@ from notebooks.utils.file_processing.types_and_classes import (  # noqa: E402
 
 def is_valid_game(row: pd.Series, config: ProcessingConfig) -> bool:
     """
-    Helper function to check if a game meets the filtering criteria. This ensures only relevant, informative games are processed.
+    Checks if a single game meets the predefined filtering criteria.
+
+    This function is a gatekeeper, ensuring that only high-quality, relevant
+    games are included in the statistical analysis. It filters out games with
+    bots, low-rated players, large rating disparities, and undesirable time
+    controls.
 
     Args:
-        row: A row from the DataFrame representing a game
-        config: Processing configuration
+        row: A pandas Series representing a single game from the dataset.
+        config: The global processing configuration object.
 
     Returns:
-        True if the game passes our filters, False otherwise
+        True if the game is valid, False otherwise.
     """
-
-    # Filter out bot games
+    # Filter out games involving bots by checking player titles.
     if (
         "BOT" in str(row.get("WhiteTitle", "")).upper()
         or "BOT" in str(row.get("BlackTitle", "")).upper()
     ):
         return False
 
-    # Check player ratings
+    # Filter out games where either player is below the minimum rating.
     if (
         row["WhiteElo"] < config.min_player_rating
         or row["BlackElo"] < config.min_player_rating
     ):
         return False
 
-    # Check rating difference
+    # Filter out games with a large rating difference between players.
     if (
         abs(row["WhiteElo"] - row["BlackElo"])
         > config.max_elo_difference_between_players
     ):
         return False
 
-    # "Event" column on game contains time control, they're titled like "Rated Blitz Games"
-    # Check that the time control is in the allowed time controls (case insensitive)
+    # Filter based on allowed time controls. The "Event" field often contains
+    # this information (e.g., "Rated Blitz game").
     event_lower = row["Event"].lower()
     if not any(tc.lower() in event_lower for tc in config.allowed_time_controls):
         return False
 
-    # Check for valid result
-    # If it's something weird that's not a win loss or draw, toss it out
+    # Filter out games with non-standard results (e.g., abandoned).
     if row["Result"] not in {"1-0", "0-1", "1/2-1/2"}:
         return False
 
     return True
 
 
-def process_batch(
-    batch_df: pd.DataFrame,
-    players_data: Dict[str, PlayerStats],
-    config: ProcessingConfig,
-    log_frequency: int = 50_000,
-    perf_tracker: Optional[PerformanceTracker] = None,
-    file_context: Optional[Dict] = None,
+def _get_or_create_ids(
+    con: duckdb.DuckDBPyConnection,
+    entity_type: str,
+    names: Set[str],
+    cache: Dict[str, int],
+    extra_data: Optional[Dict[str, Tuple]] = None,
 ) -> None:
     """
-    Process a batch of games and update the main players_data dictionary directly.
-    This function iterates through each game in a batch, filters it, and then
-    updates the statistics for the white and black players in the provided
-    players_data dictionary. This in-place update strategy avoids the need
-    for merging separate dictionaries later, preventing data duplication bugs.
+    A generic helper to fetch existing IDs or create new entries in the database.
+
+    This function optimizes database interactions by first attempting to fetch all
+    required IDs (for players or openings) in a single query. For entities that
+    don't exist, it performs a single bulk insert. This is far more efficient
+    than querying or inserting one by one.
 
     Args:
-        batch_df: DataFrame containing a batch of games.
-        players_data: The main dictionary of player statistics to be updated.
-        config: Processing configuration.
-        log_frequency: Log progress after processing this many games.
-        perf_tracker: Performance tracker object to update with filtering stats.
-        file_context: Dictionary with context about the multi-file processing job.
+        con: Active DuckDB connection.
+        entity_type: The type of entity ('player' or 'opening').
+        names: A set of unique names (player names or ECO codes) to look up.
+        cache: A dictionary used as an in-memory cache for mapping names to IDs.
+        extra_data: Optional dictionary for providing additional data for new
+                    entries (e.g., 'name' for openings, 'title' for players).
     """
-    start_time = time.time()
-    total_rows = len(batch_df)
+    if not names:
+        return
 
-    # Tracking for filtered vs. accepted games in this batch
-    batch_accepted = 0
-    batch_filtered = 0
+    # Fetch existing IDs from the database and update the cache.
+    name_col = "player_name" if entity_type == "player" else "eco"
+    id_col = "player_id" if entity_type == "player" else "opening_id"
+    placeholders = ", ".join(["?"] * len(names))
+    existing_df = con.execute(
+        f"SELECT {name_col}, {id_col} FROM {entity_type} WHERE {name_col} IN ({placeholders})",
+        list(names),
+    ).df()
 
-    # Process each game in the batch
-    for i, (_, game) in enumerate(batch_df.iterrows()):
-        # Log progress periodically within the batch
-        if (i + 1) % log_frequency == 0:
-            elapsed = time.time() - start_time
-            rate = (i + 1) / elapsed if elapsed > 0 else 0
-            total_filtered = batch_filtered
-            total_accepted = batch_accepted
-            total_processed = total_accepted + total_filtered
-            if total_processed > 0:
-                acceptance_rate = (total_accepted / total_processed) * 100
-                print(
-                    f"Progress: {i+1:,}/{total_rows:,} ({(i+1)/total_rows*100:.1f}%) - "
-                    f"Acceptance rate: {acceptance_rate:.1f}% - Rate: {rate:.1f} games/sec"
-                )
-            else:
-                print(
-                    f"Progress: {i+1:,}/{total_rows:,} ({(i+1)/total_rows*100:.1f}%) - "
-                    f"Rate: {rate:.1f} games/sec"
-                )
+    for _, row in existing_df.iterrows():
+        cache[row[name_col]] = row[id_col]
 
-        # Filter out invalid games
-        if not is_valid_game(game, config):
-            batch_filtered += 1
-            if perf_tracker:
-                perf_tracker.filtered_games += 1
-            continue
+    # Identify names that were not found in the database.
+    new_names = names - set(cache.keys())
+    if not new_names:
+        return
 
-        # Mark as accepted
-        batch_accepted += 1
-        if perf_tracker:
-            perf_tracker.accepted_games += 1
-
-        # Extract relevant fields
-        white_player = game["White"]
-        black_player = game["Black"]
-        white_title = game.get("WhiteTitle")
-        black_title = game.get("BlackTitle")
-
-        # Handle potential missing values
-        try:
-            white_elo = int(game.get("WhiteElo", 0))
-            black_elo = int(game.get("BlackElo", 0))
-        except (ValueError, TypeError):
-            white_elo = 0
-            black_elo = 0
-
-        result = game["Result"]
-        eco_code = game.get("ECO", "Unknown")
-        opening_name = game.get("Opening", "Unknown Opening")
-
-        # Process white player's game
-        if white_player not in players_data:
-            players_data[white_player] = {
-                "rating": white_elo,
-                "title": white_title,
-                "white_games": {},
-                "black_games": {},
-                "num_games_total": 0,
-            }
-
-        # Update white player's data
-        if eco_code not in players_data[white_player]["white_games"]:
-            players_data[white_player]["white_games"][eco_code] = {
-                "opening_name": opening_name,
-                "results": {
-                    "num_games": 0,
-                    "num_wins": 0,
-                    "num_losses": 0,
-                    "num_draws": 0,
-                    "score_percentage_with_opening": 0,
-                },
-            }
-
-        # Update game counts
-        players_data[white_player]["num_games_total"] += 1
-        players_data[white_player]["white_games"][eco_code]["results"]["num_games"] += 1
-
-        # Update result counts
-        if result == "1-0":  # White win
-            players_data[white_player]["white_games"][eco_code]["results"][
-                "num_wins"
-            ] += 1
-        elif result == "0-1":  # Black win (white loss)
-            players_data[white_player]["white_games"][eco_code]["results"][
-                "num_losses"
-            ] += 1
-        elif result == "1/2-1/2":  # Draw
-            players_data[white_player]["white_games"][eco_code]["results"][
-                "num_draws"
-            ] += 1
-
-        # Update score percentage
-        wins = players_data[white_player]["white_games"][eco_code]["results"][
-            "num_wins"
-        ]
-        draws = players_data[white_player]["white_games"][eco_code]["results"][
-            "num_draws"
-        ]
-        total = players_data[white_player]["white_games"][eco_code]["results"][
-            "num_games"
-        ]
-        score = (wins + (draws * 0.5)) / total * 100 if total > 0 else 0
-        players_data[white_player]["white_games"][eco_code]["results"][
-            "score_percentage_with_opening"
-        ] = round(score, 1)
-
-        # Similarly process black player's game
-        if black_player not in players_data:
-            players_data[black_player] = {
-                "rating": black_elo,
-                "title": black_title,
-                "white_games": {},
-                "black_games": {},
-                "num_games_total": 0,
-            }
-
-        # Update black player's data
-        if eco_code not in players_data[black_player]["black_games"]:
-            players_data[black_player]["black_games"][eco_code] = {
-                "opening_name": opening_name,
-                "results": {
-                    "num_games": 0,
-                    "num_wins": 0,
-                    "num_losses": 0,
-                    "num_draws": 0,
-                    "score_percentage_with_opening": 0,
-                },
-            }
-
-        # Update game counts
-        players_data[black_player]["num_games_total"] += 1
-        players_data[black_player]["black_games"][eco_code]["results"]["num_games"] += 1
-
-        # Update result counts
-        if result == "0-1":  # Black win
-            players_data[black_player]["black_games"][eco_code]["results"][
-                "num_wins"
-            ] += 1
-        elif result == "1-0":  # White win (black loss)
-            players_data[black_player]["black_games"][eco_code]["results"][
-                "num_losses"
-            ] += 1
-        elif result == "1/2-1/2":  # Draw
-            players_data[black_player]["black_games"][eco_code]["results"][
-                "num_draws"
-            ] += 1
-
-        # Update score percentage
-        wins = players_data[black_player]["black_games"][eco_code]["results"][
-            "num_wins"
-        ]
-        draws = players_data[black_player]["black_games"][eco_code]["results"][
-            "num_draws"
-        ]
-        total = players_data[black_player]["black_games"][eco_code]["results"][
-            "num_games"
-        ]
-        score = (wins + (draws * 0.5)) / total * 100 if total > 0 else 0
-        players_data[black_player]["black_games"][eco_code]["results"][
-            "score_percentage_with_opening"
-        ] = round(score, 1)
-
-    # Final progress update
-    elapsed = time.time() - start_time
-    rate = total_rows / elapsed if elapsed > 0 else 0
-    total_processed = batch_accepted + batch_filtered
-    if total_processed > 0:
-        acceptance_rate = (batch_accepted / total_processed) * 100
-        print(
-            f"Completed {total_rows:,} games in {elapsed:.1f} seconds - Rate: {rate:.1f} games/sec"
+    # Insert new entries in a single bulk operation.
+    new_entries = []
+    if entity_type == "player":
+        new_entries = [(name, extra_data.get(name, (None,))) for name in new_names]
+        con.executemany(
+            f"INSERT INTO {entity_type} (player_name, title) VALUES (?, ?)", new_entries
         )
-        print(f"    Batch acceptance rate: {acceptance_rate:.1f}%")
-    else:
-        print(
-            f"Completed {total_rows:,} games in {elapsed:.1f} seconds - Rate: {rate:.1f} games/sec"
+    elif entity_type == "opening":
+        new_entries = [
+            (eco, extra_data.get(eco, ("Unknown Opening",))) for eco in new_names
+        ]
+        con.executemany(
+            f"INSERT INTO {entity_type} (eco, name) VALUES (?, ?)", new_entries
         )
+
+    # Retrieve the newly created IDs and update the cache.
+    new_df = con.execute(
+        f"SELECT {name_col}, {id_col} FROM {entity_type} WHERE {name_col} IN ({placeholders})",
+        list(new_names),
+    ).df()
+    for _, row in new_df.iterrows():
+        cache[row[name_col]] = row[id_col]
+
+
+def process_batch(
+    batch_df: pd.DataFrame,
+    con: duckdb.DuckDBPyConnection,
+    config: ProcessingConfig,
+    perf_tracker: Optional[PerformanceTracker] = None,
+) -> None:
+    """
+    Processes a batch of games and updates the database with aggregated stats.
+
+    This is the core function for data processing. It orchestrates the filtering
+    of games, the lookup/creation of player and opening IDs, the aggregation of
+    game results, and the final bulk update to the database.
+
+    Args:
+        batch_df: A pandas DataFrame containing a batch of games.
+        con: An active DuckDB connection.
+        config: The processing configuration.
+        perf_tracker: An optional performance tracking object.
+    """
+    # 1. Filter valid games
+    valid_games_mask = batch_df.apply(is_valid_game, axis=1, config=config)
+    valid_games_df = batch_df[valid_games_mask].copy()
+
+    if perf_tracker:
+        perf_tracker.accepted_games += len(valid_games_df)
+        perf_tracker.filtered_games += len(batch_df) - len(valid_games_df)
+
+    if valid_games_df.empty:
+        print("    No valid games in this batch.")
+        return
+
+    # 2. Collect unique players and openings from the batch
+    player_names = set(valid_games_df["White"]) | set(valid_games_df["Black"])
+    openings_eco = set(valid_games_df["ECO"])
+    player_titles = {
+        row["White"]: row.get("WhiteTitle") for _, row in valid_games_df.iterrows()
+    }
+    player_titles.update(
+        {row["Black"]: row.get("BlackTitle") for _, row in valid_games_df.iterrows()}
+    )
+    opening_names = {
+        row["ECO"]: row.get("Opening", "Unknown Opening")
+        for _, row in valid_games_df.iterrows()
+    }
+
+    # 3. Get or create IDs for all players and openings
+    player_id_cache: Dict[str, int] = {}
+    opening_id_cache: Dict[str, int] = {}
+    _get_or_create_ids(con, "player", player_names, player_id_cache, player_titles)
+    _get_or_create_ids(con, "opening", openings_eco, opening_id_cache, opening_names)
+
+    # 4. Aggregate game results in memory
+    stats_updates = defaultdict(lambda: defaultdict(int))
+    for _, game in valid_games_df.iterrows():
+        white_id = player_id_cache.get(game["White"])
+        black_id = player_id_cache.get(game["Black"])
+        opening_id = opening_id_cache.get(game["ECO"])
+
+        if not all([white_id, black_id, opening_id]):
+            continue  # Should not happen if caches are populated correctly
+
+        if game["Result"] == "1-0":  # White wins
+            stats_updates[(white_id, opening_id, "w")]["wins"] += 1
+            stats_updates[(black_id, opening_id, "b")]["losses"] += 1
+        elif game["Result"] == "0-1":  # Black wins
+            stats_updates[(white_id, opening_id, "w")]["losses"] += 1
+            stats_updates[(black_id, opening_id, "b")]["wins"] += 1
+        elif game["Result"] == "1/2-1/2":  # Draw
+            stats_updates[(white_id, opening_id, "w")]["draws"] += 1
+            stats_updates[(black_id, opening_id, "b")]["draws"] += 1
+
+    # 5. Prepare data for bulk UPSERT
+    update_data: List[Tuple[int, int, str, int, int, int]] = []
+    for (player_id, opening_id, color), results in stats_updates.items():
+        update_data.append(
+            (
+                player_id,
+                opening_id,
+                color,
+                results["wins"],
+                results["draws"],
+                results["losses"],
+            )
+        )
+
+    if not update_data:
+        return
+
+    # 6. Execute bulk UPSERT operation
+    # This is the most critical performance step. The ON CONFLICT clause tells
+    # DuckDB to update the existing record if a primary key collision occurs,
+    # otherwise it inserts a new record. This single command handles all our
+    # statistical updates for the batch.
+    con.executemany(
+        """
+        INSERT INTO player_opening_stats (player_id, opening_id, color, num_wins, num_draws, num_losses)
+        VALUES (?, ?, ?, ?, ?, ?)
+        ON CONFLICT (player_id, opening_id, color) DO UPDATE SET
+            num_wins = num_wins + excluded.num_wins,
+            num_draws = num_draws + excluded.num_draws,
+            num_losses = num_losses + excluded.num_losses;
+        """,
+        update_data,
+    )
+    print(f"    Updated stats for {len(update_data)} player-opening combinations.")
