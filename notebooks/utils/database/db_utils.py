@@ -53,7 +53,7 @@ def setup_database(con: duckdb.DuckDBPyConnection):
     con.execute(
         """
         CREATE TABLE IF NOT EXISTS player (
-            player_id   SERIAL PRIMARY KEY,
+            player_id   BIGINT IDENTITY PRIMARY KEY,
             player_name VARCHAR UNIQUE NOT NULL,
             title       VARCHAR
         );
@@ -64,7 +64,7 @@ def setup_database(con: duckdb.DuckDBPyConnection):
     con.execute(
         """
         CREATE TABLE IF NOT EXISTS opening (
-            opening_id  SERIAL PRIMARY KEY,
+            opening_id  BIGINT IDENTITY PRIMARY KEY,
             eco         VARCHAR UNIQUE NOT NULL,
             name        VARCHAR NOT NULL
         );
