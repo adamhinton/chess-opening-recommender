@@ -102,6 +102,10 @@ def _get_or_create_ids(
     if not names:
         return
 
+    # --- DETAILED LOGGING START ---
+    print(f"    _get_or_create_ids for {entity_type} with {len(names)} names.")
+    # --- DETAILED LOGGING END ---
+
     # Fetch existing IDs from the database and update the cache.
     name_col = "player_name" if entity_type == "player" else "eco"
     id_col = "player_id" if entity_type == "player" else "opening_id"
@@ -117,18 +121,27 @@ def _get_or_create_ids(
     # Identify names that were not found in the database.
     new_names = names - set(cache.keys())
     if not new_names:
+        # --- DETAILED LOGGING START ---
+        print(f"    All {len(names)} {entity_type} names already exist in DB.")
+        # --- DETAILED LOGGING END ---
         return
+
+    # --- DETAILED LOGGING START ---
+    print(
+        f"    Found {len(new_names)} new {entity_type} names to insert: {list(new_names)[:10]}..."
+    )
+    # --- DETAILED LOGGING END ---
 
     # Insert new entries in a single bulk operation.
     new_entries = []
     if entity_type == "player":
-        new_entries = [(name, extra_data.get(name, (None,))) for name in new_names]
+        new_entries = [(name, extra_data.get(name)) for name in new_names]
         con.executemany(
             f"INSERT INTO {entity_type} (player_name, title) VALUES (?, ?)", new_entries
         )
     elif entity_type == "opening":
         new_entries = [
-            (eco, extra_data.get(eco, ("Unknown Opening",))) for eco in new_names
+            (eco, extra_data.get(eco, "Unknown Opening")) for eco in new_names
         ]
         con.executemany(
             f"INSERT INTO {entity_type} (eco, name) VALUES (?, ?)", new_entries
@@ -141,6 +154,10 @@ def _get_or_create_ids(
     ).df()
     for _, row in new_df.iterrows():
         cache[row[name_col]] = row[id_col]
+
+    # --- DETAILED LOGGING START ---
+    print(f"    Cache updated for {entity_type}. Total items in cache: {len(cache)}")
+    # --- DETAILED LOGGING END ---
 
 
 def process_batch(
@@ -176,6 +193,10 @@ def process_batch(
 
     # 2. Collect unique players and openings from the batch
     player_names = set(valid_games_df["White"]) | set(valid_games_df["Black"])
+    # Filter out any potential None or empty string player names
+    player_names = {
+        name for name in player_names if isinstance(name, str) and name.strip()
+    }
     openings_eco = set(valid_games_df["ECO"])
     player_titles = {
         row["White"]: row.get("WhiteTitle") for _, row in valid_games_df.iterrows()
@@ -202,6 +223,15 @@ def process_batch(
         opening_id = opening_id_cache.get(game["ECO"])
 
         if not all([white_id, black_id, opening_id]):
+            # --- DETAILED LOGGING START ---
+            print("    [ERROR] Found a game with missing ID after cache population.")
+            if not white_id:
+                print(f"    Missing white_id for player: {game['White']}")
+            if not black_id:
+                print(f"    Missing black_id for player: {game['Black']}")
+            if not opening_id:
+                print(f"    Missing opening_id for ECO: {game['ECO']}")
+            # --- DETAILED LOGGING END ---
             continue  # Should not happen if caches are populated correctly
 
         if game["Result"] == "1-0":  # White wins

@@ -48,11 +48,16 @@ def setup_database(con: duckdb.DuckDBPyConnection):
         con: An active DuckDB connection.
     """
     print("Initializing database schema...")
+
+    # Create sequences for auto-incrementing primary keys if they don't exist.
+    con.execute("CREATE SEQUENCE IF NOT EXISTS player_id_seq START 1;")
+    con.execute("CREATE SEQUENCE IF NOT EXISTS opening_id_seq START 1;")
+
     # The player_name is UNIQUE to ensure we don't have duplicate player entries.
     con.execute(
         """
         CREATE TABLE IF NOT EXISTS player (
-            player_id   INTEGER PRIMARY KEY,
+            player_id   INTEGER PRIMARY KEY DEFAULT nextval('player_id_seq'),
             player_name VARCHAR UNIQUE NOT NULL,
             title       VARCHAR
         );
@@ -63,7 +68,7 @@ def setup_database(con: duckdb.DuckDBPyConnection):
     con.execute(
         """
         CREATE TABLE IF NOT EXISTS opening (
-            opening_id  INTEGER PRIMARY KEY,
+            opening_id  INTEGER PRIMARY KEY DEFAULT nextval('opening_id_seq'),
             eco         VARCHAR UNIQUE NOT NULL,
             name        VARCHAR NOT NULL
         );
