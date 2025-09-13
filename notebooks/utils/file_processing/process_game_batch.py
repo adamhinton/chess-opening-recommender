@@ -138,6 +138,8 @@ def process_batch(
         # Extract relevant fields
         white_player = game["White"]
         black_player = game["Black"]
+        white_title = game.get("WhiteTitle")
+        black_title = game.get("BlackTitle")
 
         # Handle potential missing values
         try:
@@ -155,6 +157,7 @@ def process_batch(
         if white_player not in players_data:
             players_data[white_player] = {
                 "rating": white_elo,
+                "title": white_title,
                 "white_games": {},
                 "black_games": {},
                 "num_games_total": 0,
@@ -210,6 +213,7 @@ def process_batch(
         if black_player not in players_data:
             players_data[black_player] = {
                 "rating": black_elo,
+                "title": black_title,
                 "white_games": {},
                 "black_games": {},
                 "num_games_total": 0,

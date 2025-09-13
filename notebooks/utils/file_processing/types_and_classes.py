@@ -22,6 +22,9 @@ class PlayerStats(TypedDict):
     """Statistics for an individual player."""
 
     rating: int
+    title: Optional[
+        str
+    ]  # Checking for players with BOT in their name to filter out bot games
     white_games: Dict[str, OpeningResults]  # ECO code -> results
     black_games: Dict[str, OpeningResults]  # ECO code -> results
     num_games_total: int
