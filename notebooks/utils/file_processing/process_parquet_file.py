@@ -81,7 +81,7 @@ def process_parquet_file(
 
             # Read a batch from the parquet file.
             # Excluding 'movetext' saves significant memory and processing time.
-            batch_query = f"SELECT * EXCLUDE movetext FROM '{config.parquet_path}' LIMIT {config.batch_size} OFFSET {offset}"
+            batch_query = f"SELECT * EXCLUDE(Site, UTCDate, UTCTime, movetext)FROM '{config.parquet_path}' LIMIT {config.batch_size} OFFSET {offset}"
 
             # We use a new connection for the read to avoid potential conflicts
             # with the main DB connection, though this is largely a precaution.
