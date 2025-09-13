@@ -48,12 +48,11 @@ def setup_database(con: duckdb.DuckDBPyConnection):
         con: An active DuckDB connection.
     """
     print("Initializing database schema...")
-    # Use SERIAL as a convenient alias for BIGINT AUTO_INCREMENT.
     # The player_name is UNIQUE to ensure we don't have duplicate player entries.
     con.execute(
         """
         CREATE TABLE IF NOT EXISTS player (
-            player_id   BIGINT IDENTITY PRIMARY KEY,
+            player_id   INTEGER PRIMARY KEY,
             player_name VARCHAR UNIQUE NOT NULL,
             title       VARCHAR
         );
@@ -64,7 +63,7 @@ def setup_database(con: duckdb.DuckDBPyConnection):
     con.execute(
         """
         CREATE TABLE IF NOT EXISTS opening (
-            opening_id  BIGINT IDENTITY PRIMARY KEY,
+            opening_id  INTEGER PRIMARY KEY,
             eco         VARCHAR UNIQUE NOT NULL,
             name        VARCHAR NOT NULL
         );
@@ -78,8 +77,8 @@ def setup_database(con: duckdb.DuckDBPyConnection):
     con.execute(
         """
         CREATE TABLE IF NOT EXISTS player_opening_stats (
-            player_id   BIGINT,
-            opening_id  BIGINT,
+            player_id   INTEGER,
+            opening_id  INTEGER,
             color       VARCHAR(1) NOT NULL CHECK (color IN ('w', 'b')),
             num_wins    INTEGER DEFAULT 0,
             num_draws   INTEGER DEFAULT 0,
