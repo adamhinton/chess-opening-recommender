@@ -36,6 +36,14 @@ def is_valid_game(row: pd.Series, config: ProcessingConfig) -> bool:
     Returns:
         True if the game passes our filters, False otherwise
     """
+
+    # Filter out bot games
+    if (
+        "BOT" in str(row.get("WhiteTitle", "")).upper()
+        or "BOT" in str(row.get("BlackTitle", "")).upper()
+    ):
+        return False
+
     # Check player ratings
     if (
         row["WhiteElo"] < config.min_player_rating
