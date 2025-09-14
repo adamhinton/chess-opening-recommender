@@ -10,4 +10,6 @@ __pycache__/
 *.zst
 *.parquet
 *.pkl
-*.db
+*.db.wal
+chess_games.db.wal
+chess_games.db

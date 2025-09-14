@@ -2,20 +2,17 @@
 # This module is responsible for processing a single batch of chess games. It
 # filters games based on defined criteria, extracts relevant information, and
 # efficiently updates a DuckDB database with player and opening statistics.
-# The key design goal is to perform these updates in a batched manner to
-# minimize database transactions and maximize throughput, which is critical
-# when processing billions of games.
+# The key design goal is to leverage DuckDB's SQL capabilities to perform these
+# updates in a highly vectorized and parallelized manner, maximizing throughput.
 # ----------------------------------------------------------------------------------
 
 import pandas as pd
 import duckdb
-from collections import defaultdict
-from typing import Dict, Optional, Set, Tuple, List, Any
+from typing import Optional
 import sys
 from pathlib import Path
 
 # Ensure the project root is in the system path to allow for absolute imports.
-# This is crucial for making the script runnable from different locations.
 project_root = Path(__file__).resolve().parents[3]
 if str(project_root) not in sys.path:
     sys.path.append(str(project_root))
@@ -26,177 +23,6 @@ from notebooks.utils.file_processing.types_and_classes import (  # noqa: E402
 )
 
 
-def is_valid_game(row: pd.Series, config: ProcessingConfig) -> bool:
-    """
-    Checks if a single game meets the predefined filtering criteria.
-
-    This function is a gatekeeper, ensuring that only high-quality, relevant
-    games are included in the statistical analysis. It filters out games with
-    bots, low-rated players, large rating disparities, and undesirable time
-    controls.
-
-    Args:
-        row: A pandas Series representing a single game from the dataset.
-        config: The global processing configuration object.
-
-    Returns:
-        True if the game is valid, False otherwise.
-    """
-    # Filter out games involving bots by checking player titles.
-    if (
-        "BOT" in str(row.get("WhiteTitle", "")).upper()
-        or "BOT" in str(row.get("BlackTitle", "")).upper()
-    ):
-        return False
-
-    # Filter out games where either player is below the minimum rating.
-    if (
-        row["WhiteElo"] < config.min_player_rating
-        or row["BlackElo"] < config.min_player_rating
-    ):
-        return False
-
-    # Filter out games with a large rating difference between players.
-    if (
-        abs(row["WhiteElo"] - row["BlackElo"])
-        > config.max_elo_difference_between_players
-    ):
-        return False
-
-    # Filter based on allowed time controls. The "Event" field often contains
-    # this information (e.g., "Rated Blitz game").
-    event_lower = row["Event"].lower()
-    if not any(tc.lower() in event_lower for tc in config.allowed_time_controls):
-        return False
-
-    # Filter out games with non-standard results (e.g., abandoned).
-    if row["Result"] not in {"1-0", "0-1", "1/2-1/2"}:
-        return False
-
-    return True
-
-
-def _get_or_create_ids(
-    con: duckdb.DuckDBPyConnection,
-    entity_type: str,  # "player" or "opening"
-    names: Set[str],
-    cache: Dict[str, int],
-    extra_data: Optional[Dict[str, Any]] = None,
-) -> None:
-    """
-    Efficiently gets or creates IDs for a set of players or openings,
-    updating a local cache to minimize DB queries.
-
-    This function is a critical performance component. It's designed to handle
-    a massive number of player names or opening ECOs within a batch without
-    overwhelming the database.
-
-    The core challenge is that a single batch can contain tens of thousands of
-    new players that don't exist in the database. Attempting to query or insert
-    all of them in a single SQL statement would hit database parameter limits
-    (e.g., DuckDB's limit of ~100,000) and be highly inefficient.
-
-    The strategy is to "chunk" the database operations:
-    1.  Identify names not present in the in-memory `cache`.
-    2.  For these new names, query the database in chunks to see which ones
-        already exist. This avoids a single massive `SELECT ... IN (...)` query.
-    3.  For names that are truly new, insert them into the database in chunks.
-        This avoids a single massive `INSERT` statement.
-    4.  Finally, query the DB for the newly inserted records to populate their
-        IDs into the cache for use in subsequent steps.
-
-    Args:
-        con: Active DuckDB connection.
-        entity_type: The type of entity ('player' or 'opening').
-        names: A set of unique names (player names or ECO codes) to look up.
-        cache: A dictionary used as an in-memory cache for mapping names to IDs.
-        extra_data: Optional dictionary for providing additional data for new
-                    entries (e.g., 'name' for openings, 'title' for players).
-    """
-    table_name = entity_type
-    id_column = "id"
-    name_column = "name" if entity_type == "player" else "eco"
-
-    if not names:
-        return
-
-    # 1. Find which names are not in the cache.
-    new_names = list(names - set(cache.keys()))
-
-    # 2. For the new names, check which ones are already in the database.
-    #    This is done in chunks to avoid hitting the SQL parameter limit.
-    if new_names:
-        print(f"    _get_or_create_ids for {entity_type} with {len(new_names)} names.")
-
-        # Use a copy of new_names to iterate over, while modifying the set
-        names_to_insert_in_db = set(new_names)
-        chunk_size = 50000  # A safe chunk size well below DB limits.
-
-        for i in range(0, len(new_names), chunk_size):
-            chunk = new_names[i : i + chunk_size]
-            placeholders = ", ".join(["?"] * len(chunk))
-            query = f"SELECT {name_column}, {id_column} FROM {table_name} WHERE {name_column} IN ({placeholders})"
-
-            existing_in_db = con.execute(query, chunk).fetchall()
-
-            if existing_in_db:
-                # Update cache with what we found in the DB
-                for name, entity_id in existing_in_db:
-                    cache[name] = entity_id
-
-                # Remove the ones we found from the set of names we need to insert
-                found_names = {row[0] for row in existing_in_db}
-                names_to_insert_in_db -= found_names
-
-        print(
-            f"    All {len(new_names)} names checked against DB. Found {len(new_names) - len(names_to_insert_in_db)} existing entries."
-        )
-
-        # 3. Insert any remaining new names into the database, again in chunks.
-        if names_to_insert_in_db:
-            names_to_insert_list = sorted(
-                list(names_to_insert_in_db)
-            )  # Sort for determinism
-            print(
-                f"    Found {len(names_to_insert_list)} new {entity_type} names to insert: {names_to_insert_list[:10]}..."
-            )
-
-            for i in range(0, len(names_to_insert_list), chunk_size):
-                chunk = names_to_insert_list[i : i + chunk_size]
-                if entity_type == "player":
-                    insert_data = [(name, extra_data.get(name)) for name in chunk]
-                    con.executemany(
-                        f"INSERT INTO {table_name} (name, title) VALUES (?, ?)",
-                        insert_data,
-                    )
-                else:  # opening
-                    insert_data = [
-                        (eco, extra_data.get(eco, "Unknown Opening")) for eco in chunk
-                    ]
-                    con.executemany(
-                        f"INSERT INTO {table_name} (eco, name) VALUES (?, ?)",
-                        insert_data,
-                    )
-
-            # 4. Fetch the new IDs and update the cache.
-            #    This is also chunked for safety, though the list of names to
-            #    query will be the same size as the insertion list.
-            for i in range(0, len(names_to_insert_list), chunk_size):
-                chunk = names_to_insert_list[i : i + chunk_size]
-                placeholders = ", ".join(["?"] * len(chunk))
-                newly_inserted = con.execute(
-                    f"SELECT {name_column}, {id_column} FROM {table_name} WHERE {name_column} IN ({placeholders})",
-                    chunk,
-                ).fetchall()
-
-                for name, entity_id in newly_inserted:
-                    cache[name] = entity_id
-
-            print(
-                f"    Cache updated for {entity_type}. Total items in cache: {len(cache)}"
-            )
-
-
 def process_batch(
     batch_df: pd.DataFrame,
     con: duckdb.DuckDBPyConnection,
@@ -204,11 +30,19 @@ def process_batch(
     perf_tracker: Optional[PerformanceTracker] = None,
 ) -> None:
     """
-    Processes a batch of games and updates the database with aggregated stats.
+    Processes a batch of games and updates the database with aggregated stats
+    using a SQL-centric, vectorized approach.
 
-    This is the core function for data processing. It orchestrates the filtering
-    of games, the lookup/creation of player and opening IDs, the aggregation of
-    game results, and the final bulk update to the database.
+    This function orchestrates the entire batch processing pipeline within DuckDB:
+    1.  Loads the raw pandas DataFrame into a temporary table.
+    2.  Filters for valid games using a single, powerful SQL query.
+    3.  Inserts new players and openings into their respective tables.
+    4.  Aggregates game statistics (wins, draws, losses).
+    5.  Performs a bulk UPSERT into the main player_opening_stats table.
+
+    This SQL-first methodology is substantially faster than row-by-row processing
+    in Python, as it delegates the heavy lifting to DuckDB's optimized,
+    columnar execution engine.
 
     Args:
         batch_df: A pandas DataFrame containing a batch of games.
@@ -216,102 +50,154 @@ def process_batch(
         config: The processing configuration.
         perf_tracker: An optional performance tracking object.
     """
-    # 1. Filter valid games
-    valid_games_mask = batch_df.apply(is_valid_game, axis=1, config=config)
-    valid_games_df = batch_df[valid_games_mask].copy()
+    if batch_df.empty:
+        print("    Skipping empty batch.")
+        return
 
+    # Register the pandas DataFrame as a temporary virtual table in DuckDB.
+    # This avoids the overhead of writing the data to disk and allows DuckDB
+    # to query it directly from memory.
+    temp_table_name = "raw_games_batch"
+    con.register(temp_table_name, batch_df)
+
+    # 1. Filter valid games and store them in a new temporary table.
+    # This single SQL query replaces the slow, row-by-row `is_valid_game`
+    # function. It applies all filtering logic in one pass, which is highly
+    # efficient in a columnar database like DuckDB.
+    time_control_pattern = "|".join([tc.lower() for tc in config.allowed_time_controls])
+
+    filter_query = f"""
+    CREATE OR REPLACE TEMP TABLE valid_games AS
+    SELECT *
+    FROM {temp_table_name}
+    WHERE
+        -- Filter out games involving bots by checking player titles.
+        (WhiteTitle IS NULL OR WhiteTitle NOT LIKE '%%BOT%%') AND
+        (BlackTitle IS NULL OR BlackTitle NOT LIKE '%%BOT%%') AND
+        -- Filter by minimum player rating.
+        WhiteElo >= {config.min_player_rating} AND
+        BlackElo >= {config.min_player_rating} AND
+        -- Filter by maximum rating difference between players.
+        abs(WhiteElo - BlackElo) <= {config.max_elo_difference_between_players} AND
+        -- Filter by allowed time controls using a regex match on the 'Event' field.
+        regexp_matches(lower(Event), '{time_control_pattern}') AND
+        -- Ensure the game has a standard result.
+        Result IN ('1-0', '0-1', '1/2-1/2') AND
+        -- Ensure essential fields are not null.
+        White IS NOT NULL AND Black IS NOT NULL AND ECO IS NOT NULL;
+    """
+    con.execute(filter_query)
+
+    # Update performance tracker with the number of games that passed the filter.
+    num_valid_games = con.execute("SELECT COUNT(*) FROM valid_games").fetchone()[0]
     if perf_tracker:
-        perf_tracker.accepted_games += len(valid_games_df)
-        perf_tracker.filtered_games += len(batch_df) - len(valid_games_df)
+        perf_tracker.accepted_games += num_valid_games
+        perf_tracker.filtered_games += len(batch_df) - num_valid_games
 
-    if valid_games_df.empty:
-        print("    No valid games in this batch.")
+    if num_valid_games == 0:
+        print("    No valid games in this batch after filtering.")
+        con.unregister(temp_table_name)
         return
 
-    # 2. Collect unique players and openings from the batch
-    player_names = set(valid_games_df["White"]) | set(valid_games_df["Black"])
-    # Filter out any potential None or empty string player names
-    player_names = {
-        name for name in player_names if isinstance(name, str) and name.strip()
-    }
-    openings_eco = set(valid_games_df["ECO"])
-    player_titles = {
-        row["White"]: row.get("WhiteTitle") for _, row in valid_games_df.iterrows()
-    }
-    player_titles.update(
-        {row["Black"]: row.get("BlackTitle") for _, row in valid_games_df.iterrows()}
-    )
-    opening_names = {
-        row["ECO"]: row.get("Opening", "Unknown Opening")
-        for _, row in valid_games_df.iterrows()
-    }
-
-    # 3. Get or create IDs for all players and openings
-    player_id_cache: Dict[str, int] = {}
-    opening_id_cache: Dict[str, int] = {}
-    _get_or_create_ids(con, "player", player_names, player_id_cache, player_titles)
-    _get_or_create_ids(con, "opening", openings_eco, opening_id_cache, opening_names)
-
-    # 4. Aggregate game results in memory
-    stats_updates = defaultdict(lambda: defaultdict(int))
-    for _, game in valid_games_df.iterrows():
-        white_id = player_id_cache.get(game["White"])
-        black_id = player_id_cache.get(game["Black"])
-        opening_id = opening_id_cache.get(game["ECO"])
-
-        if not all([white_id, black_id, opening_id]):
-            # --- DETAILED LOGGING START ---
-            print("    [ERROR] Found a game with missing ID after cache population.")
-            if not white_id:
-                print(f"    Missing white_id for player: {game['White']}")
-            if not black_id:
-                print(f"    Missing black_id for player: {game['Black']}")
-            if not opening_id:
-                print(f"    Missing opening_id for ECO: {game['ECO']}")
-            # --- DETAILED LOGGING END ---
-            continue  # Should not happen if caches are populated correctly
-
-        if game["Result"] == "1-0":  # White wins
-            stats_updates[(white_id, opening_id, "w")]["wins"] += 1
-            stats_updates[(black_id, opening_id, "b")]["losses"] += 1
-        elif game["Result"] == "0-1":  # Black wins
-            stats_updates[(white_id, opening_id, "w")]["losses"] += 1
-            stats_updates[(black_id, opening_id, "b")]["wins"] += 1
-        elif game["Result"] == "1/2-1/2":  # Draw
-            stats_updates[(white_id, opening_id, "w")]["draws"] += 1
-            stats_updates[(black_id, opening_id, "b")]["draws"] += 1
-
-    # 5. Prepare data for bulk UPSERT
-    update_data: List[Tuple[int, int, str, int, int, int]] = []
-    for (player_id, opening_id, color), results in stats_updates.items():
-        update_data.append(
-            (
-                player_id,
-                opening_id,
-                color,
-                results["wins"],
-                results["draws"],
-                results["losses"],
-            )
-        )
-
-    if not update_data:
-        return
-
-    # 6. Execute bulk UPSERT operation
-    # This is the most critical performance step. The ON CONFLICT clause tells
-    # DuckDB to update the existing record if a primary key collision occurs,
-    # otherwise it inserts a new record. This single command handles all our
-    # statistical updates for the batch.
-    con.executemany(
+    # 2. Extract unique players and openings from the filtered games.
+    # These temporary tables will be used to efficiently insert new entities
+    # into the main 'player' and 'opening' tables.
+    con.execute(
         """
-        INSERT INTO player_opening_stats (player_id, opening_id, color, num_wins, num_draws, num_losses)
-        VALUES (?, ?, ?, ?, ?, ?)
-        ON CONFLICT (player_id, opening_id, color) DO UPDATE SET
-            num_wins = num_wins + excluded.num_wins,
-            num_draws = num_draws + excluded.num_draws,
-            num_losses = num_losses + excluded.num_losses;
-        """,
-        update_data,
+        CREATE OR REPLACE TEMP TABLE batch_players AS
+            SELECT DISTINCT White AS name, WhiteTitle as title FROM valid_games
+            UNION ALL
+            SELECT DISTINCT Black AS name, BlackTitle as title FROM valid_games;
+
+        CREATE OR REPLACE TEMP TABLE batch_openings AS
+            SELECT DISTINCT ECO as eco, Opening as name FROM valid_games;
+    """
     )
-    print(f"    Updated stats for {len(update_data)} player-opening combinations.")
+
+    # 3. Insert new players and openings into their main tables.
+    # The `ON CONFLICT DO NOTHING` clause is a highly efficient way to insert
+    # only the new entities, ignoring any duplicates that already exist in the
+    # target table. This avoids costly pre-checks.
+    con.execute(
+        "INSERT INTO player (name, title) SELECT name, title FROM batch_players ON CONFLICT(name) DO NOTHING;"
+    )
+    con.execute(
+        "INSERT INTO opening (eco, name) SELECT eco, name FROM batch_openings ON CONFLICT(eco) DO NOTHING;"
+    )
+
+    # 4. Aggregate game statistics using pure SQL.
+    # This is the core of the new logic. It performs several steps in one go:
+    #   - Joins `valid_games` with the `player` and `opening` tables to get the foreign keys.
+    #   - Unpivots the data to create one row per player-per-game.
+    #   - Calculates the result for each player (win, loss, draw).
+    #   - Groups by player, opening, and color to count the final stats.
+    stats_query = """
+    CREATE OR REPLACE TEMP TABLE aggregated_stats AS
+    WITH game_results AS (
+        -- First, join games with players and openings to resolve names to IDs.
+        SELECT
+            wp.id AS white_id,
+            bp.id AS black_id,
+            op.id AS opening_id,
+            -- Determine the result from White's perspective.
+            CASE
+                WHEN g.Result = '1-0' THEN 'win'
+                WHEN g.Result = '0-1' THEN 'loss'
+                ELSE 'draw'
+            END AS white_result
+        FROM valid_games AS g
+        JOIN player AS wp ON g.White = wp.name
+        JOIN player AS bp ON g.Black = bp.name
+        JOIN opening AS op ON g.ECO = op.eco
+    ),
+    -- Unpivot the data to create one row per player-game combination.
+    -- This is necessary for aggregating stats for both White and Black players.
+    unpivoted_results AS (
+        SELECT white_id AS player_id, opening_id, 'w' AS color, white_result AS result FROM game_results
+        UNION ALL
+        SELECT black_id AS player_id, opening_id, 'b' AS color,
+            -- Invert the result for the Black player.
+            CASE
+                WHEN white_result = 'win' THEN 'loss'
+                WHEN white_result = 'loss' THEN 'win'
+                ELSE 'draw'
+            END AS result
+        FROM game_results
+    )
+    -- Finally, group by player, opening, and color to aggregate the results.
+    SELECT
+        player_id,
+        opening_id,
+        color,
+        COUNT(CASE WHEN result = 'win' THEN 1 END) AS wins,
+        COUNT(CASE WHEN result = 'draw' THEN 1 END) AS draws,
+        COUNT(CASE WHEN result = 'loss' THEN 1 END) AS losses
+    FROM unpivoted_results
+    GROUP BY player_id, opening_id, color;
+    """
+    con.execute(stats_query)
+
+    # 5. Execute a single bulk UPSERT to update the main statistics table.
+    # This is the final, critical step. `ON CONFLICT DO UPDATE` allows us to
+    # either insert a new row or update an existing one in a single atomic
+    # operation. We add the new results to the existing counts, ensuring that
+    # statistics are cumulative.
+    upsert_query = """
+    INSERT INTO player_opening_stats (player_id, opening_id, color, num_wins, num_draws, num_losses)
+    SELECT player_id, opening_id, color, wins, draws, losses
+    FROM aggregated_stats
+    ON CONFLICT (player_id, opening_id, color) DO UPDATE SET
+        num_wins = player_opening_stats.num_wins + excluded.num_wins,
+        num_draws = player_opening_stats.num_draws + excluded.num_draws,
+        num_losses = player_opening_stats.num_losses + excluded.num_losses;
+    """
+    con.execute(upsert_query)
+
+    num_combinations = con.execute("SELECT COUNT(*) FROM aggregated_stats").fetchone()[
+        0
+    ]
+    print(f"    Processed {num_valid_games:,} games.")
+    print(f"    Updated stats for {num_combinations:,} player-opening combinations.")
+
+    # Clean up by unregistering the virtual table to free up memory.
+    con.unregister(temp_table_name)
