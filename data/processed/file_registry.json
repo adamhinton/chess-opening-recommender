@@ -30,9 +30,104 @@
         "size_bytes": 1016219694,
         "etag": "06288a0922e23d66ba059ff28e1d497fcfa18c5b5c1384beb1e007683d353168",
         "processed_date": "2025-09-13 20:48:43"
+      },
+      "2025-03-train-00006-of-00069.parquet": {
+        "size_bytes": 1026924106,
+        "etag": "96e4d4b6e4f57164b2ae7b88c8634d1ae50fa0b0e877d43479c98582f10b8970",
+        "processed_date": "2025-09-13 20:49:57"
+      },
+      "2025-03-train-00007-of-00069.parquet": {
+        "size_bytes": 1013547803,
+        "etag": "726ade1ba815b513be088048ef6ebe9a9eeec0e81b059f0ab847f3ae7a0385ab",
+        "processed_date": "2025-09-13 20:51:15"
+      },
+      "2025-03-train-00008-of-00069.parquet": {
+        "size_bytes": 1027280554,
+        "etag": "0793587b71a9ecef59a15da94f234899a79c05cea6a815e89957933ec32e771c",
+        "processed_date": "2025-09-13 20:52:34"
+      },
+      "2025-03-train-00009-of-00069.parquet": {
+        "size_bytes": 1010602431,
+        "etag": "1ecacdb265146e3a9a1b4412ce7584d8c816fcfc00b60f51532649646f451162",
+        "processed_date": "2025-09-13 20:54:01"
+      },
+      "2025-03-train-00010-of-00069.parquet": {
+        "size_bytes": 1022027913,
+        "etag": "259c49976c0bc5dd5696d670f8485d809a3bf512a870412d60863fe81b7a1158",
+        "processed_date": "2025-09-13 20:56:58"
+      },
+      "2025-03-train-00011-of-00069.parquet": {
+        "size_bytes": 1016011106,
+        "etag": "4f403d7c669910ab686b8a56b6313ff54b8e56d6ad6f50cb8597a494c37eb288",
+        "processed_date": "2025-09-13 20:58:27"
+      },
+      "2025-03-train-00012-of-00069.parquet": {
+        "size_bytes": 1021585059,
+        "etag": "a78c0712d00b374eba58b95662fd7d371a2c54830540f84232e28daa97e150b3",
+        "processed_date": "2025-09-13 20:59:58"
+      },
+      "2025-03-train-00013-of-00069.parquet": {
+        "size_bytes": 1021944914,
+        "etag": "dc1b914e130e73c23cc16e7fe1f14265c48fcca65166d90275b7d45bf4b088d0",
+        "processed_date": "2025-09-13 21:01:31"
+      },
+      "2025-03-train-00014-of-00069.parquet": {
+        "size_bytes": 1014835559,
+        "etag": "9b5311420084d962d7ad326471544533ec1e7e042bea472b2987289317b99ee3",
+        "processed_date": "2025-09-13 21:03:06"
+      },
+      "2025-03-train-00015-of-00069.parquet": {
+        "size_bytes": 1020597377,
+        "etag": "2c5328c127822dd840fcbfe4e6182fd27a1d2d1ce0f5627216ed50e29266928d",
+        "processed_date": "2025-09-13 21:07:52"
+      },
+      "2025-03-train-00016-of-00069.parquet": {
+        "size_bytes": 1024443961,
+        "etag": "237d19d98563fd2cd2278accfce82ffdb99b3632471b387a578562557a2ede31",
+        "processed_date": "2025-09-13 21:09:31"
+      },
+      "2025-03-train-00017-of-00069.parquet": {
+        "size_bytes": 1028905351,
+        "etag": "bcd73e55d67dc7ff21c0528a027a9274dcefdeece2d7e354f11bd4228929713e",
+        "processed_date": "2025-09-13 21:11:24"
+      },
+      "2025-03-train-00018-of-00069.parquet": {
+        "size_bytes": 1025129478,
+        "etag": "8c607d70652ef598623bb4de5df8c1598417dc76744b5841e5fd9a1012da27a3",
+        "processed_date": "2025-09-13 21:13:06"
+      },
+      "2025-03-train-00019-of-00069.parquet": {
+        "size_bytes": 1030306952,
+        "etag": "22b4aa880058161c1807f208de44254273bdfb18f7ba9712105ee1e9acf458f6",
+        "processed_date": "2025-09-13 21:14:47"
+      },
+      "2025-03-train-00020-of-00069.parquet": {
+        "size_bytes": 1014177719,
+        "etag": "d52ff447305a14e3d030921d2bc8a6524170be6524fab24ef017c240e2bdeacb",
+        "processed_date": "2025-09-13 21:19:10"
+      },
+      "2025-03-train-00021-of-00069.parquet": {
+        "size_bytes": 1025017887,
+        "etag": "41220a0b624fb942cd1fc1adaa1f8fc5dee5d5a446e1555154865321919f07c1",
+        "processed_date": "2025-09-13 21:20:54"
+      },
+      "2025-03-train-00022-of-00069.parquet": {
+        "size_bytes": 1018197318,
+        "etag": "c2cda7c554ce41727f9c88f8931038ad8d94149982e90a6ef4f68fcdca3f7c03",
+        "processed_date": "2025-09-13 21:22:37"
+      },
+      "2025-03-train-00023-of-00069.parquet": {
+        "size_bytes": 1018030380,
+        "etag": "0c61a55ea19044c40d2ad4b4a34241e4e16c1790dda7e90170df7e991475de08",
+        "processed_date": "2025-09-13 21:24:28"
+      },
+      "2025-03-train-00024-of-00069.parquet": {
+        "size_bytes": 1017382912,
+        "etag": "4b653d0b228478fd3b69f1629d021796ae60cbc115777ebbea553bb4975ff79a",
+        "processed_date": "2025-09-13 21:25:07"
       }
     }
   },
   "skipped_files": {},
-  "last_updated": "2025-09-13 20:48:43"
+  "last_updated": "2025-09-13 21:25:07"
 }
