@@ -10,7 +10,7 @@
 import pandas as pd
 import duckdb
 from collections import defaultdict
-from typing import Dict, Optional, Set, Tuple, List
+from typing import Dict, Optional, Set, Tuple, List, Any
 import sys
 from pathlib import Path
 
@@ -78,18 +78,32 @@ def is_valid_game(row: pd.Series, config: ProcessingConfig) -> bool:
 
 def _get_or_create_ids(
     con: duckdb.DuckDBPyConnection,
-    entity_type: str,
+    entity_type: str,  # "player" or "opening"
     names: Set[str],
     cache: Dict[str, int],
-    extra_data: Optional[Dict[str, Tuple]] = None,
+    extra_data: Optional[Dict[str, Any]] = None,
 ) -> None:
     """
-    A generic helper to fetch existing IDs or create new entries in the database.
+    Efficiently gets or creates IDs for a set of players or openings,
+    updating a local cache to minimize DB queries.
 
-    This function optimizes database interactions by first attempting to fetch all
-    required IDs (for players or openings) in a single query. For entities that
-    don't exist, it performs a single bulk insert. This is far more efficient
-    than querying or inserting one by one.
+    This function is a critical performance component. It's designed to handle
+    a massive number of player names or opening ECOs within a batch without
+    overwhelming the database.
+
+    The core challenge is that a single batch can contain tens of thousands of
+    new players that don't exist in the database. Attempting to query or insert
+    all of them in a single SQL statement would hit database parameter limits
+    (e.g., DuckDB's limit of ~100,000) and be highly inefficient.
+
+    The strategy is to "chunk" the database operations:
+    1.  Identify names not present in the in-memory `cache`.
+    2.  For these new names, query the database in chunks to see which ones
+        already exist. This avoids a single massive `SELECT ... IN (...)` query.
+    3.  For names that are truly new, insert them into the database in chunks.
+        This avoids a single massive `INSERT` statement.
+    4.  Finally, query the DB for the newly inserted records to populate their
+        IDs into the cache for use in subsequent steps.
 
     Args:
         con: Active DuckDB connection.
@@ -99,65 +113,88 @@ def _get_or_create_ids(
         extra_data: Optional dictionary for providing additional data for new
                     entries (e.g., 'name' for openings, 'title' for players).
     """
+    table_name = entity_type
+    id_column = "id"
+    name_column = "name" if entity_type == "player" else "eco"
+
     if not names:
         return
 
-    # --- DETAILED LOGGING START ---
-    print(f"    _get_or_create_ids for {entity_type} with {len(names)} names.")
-    # --- DETAILED LOGGING END ---
+    # 1. Find which names are not in the cache.
+    new_names = list(names - set(cache.keys()))
 
-    # Fetch existing IDs from the database and update the cache.
-    name_col = "player_name" if entity_type == "player" else "eco"
-    id_col = "player_id" if entity_type == "player" else "opening_id"
-    placeholders = ", ".join(["?"] * len(names))
-    existing_df = con.execute(
-        f"SELECT {name_col}, {id_col} FROM {entity_type} WHERE {name_col} IN ({placeholders})",
-        list(names),
-    ).df()
+    # 2. For the new names, check which ones are already in the database.
+    #    This is done in chunks to avoid hitting the SQL parameter limit.
+    if new_names:
+        print(f"    _get_or_create_ids for {entity_type} with {len(new_names)} names.")
 
-    for _, row in existing_df.iterrows():
-        cache[row[name_col]] = row[id_col]
+        # Use a copy of new_names to iterate over, while modifying the set
+        names_to_insert_in_db = set(new_names)
+        chunk_size = 50000  # A safe chunk size well below DB limits.
 
-    # Identify names that were not found in the database.
-    new_names = names - set(cache.keys())
-    if not new_names:
-        # --- DETAILED LOGGING START ---
-        print(f"    All {len(names)} {entity_type} names already exist in DB.")
-        # --- DETAILED LOGGING END ---
-        return
+        for i in range(0, len(new_names), chunk_size):
+            chunk = new_names[i : i + chunk_size]
+            placeholders = ", ".join(["?"] * len(chunk))
+            query = f"SELECT {name_column}, {id_column} FROM {table_name} WHERE {name_column} IN ({placeholders})"
 
-    # --- DETAILED LOGGING START ---
-    print(
-        f"    Found {len(new_names)} new {entity_type} names to insert: {list(new_names)[:10]}..."
-    )
-    # --- DETAILED LOGGING END ---
+            existing_in_db = con.execute(query, chunk).fetchall()
 
-    # Insert new entries in a single bulk operation.
-    new_entries = []
-    if entity_type == "player":
-        new_entries = [(name, extra_data.get(name)) for name in new_names]
-        con.executemany(
-            f"INSERT INTO {entity_type} (player_name, title) VALUES (?, ?)", new_entries
-        )
-    elif entity_type == "opening":
-        new_entries = [
-            (eco, extra_data.get(eco, "Unknown Opening")) for eco in new_names
-        ]
-        con.executemany(
-            f"INSERT INTO {entity_type} (eco, name) VALUES (?, ?)", new_entries
+            if existing_in_db:
+                # Update cache with what we found in the DB
+                for name, entity_id in existing_in_db:
+                    cache[name] = entity_id
+
+                # Remove the ones we found from the set of names we need to insert
+                found_names = {row[0] for row in existing_in_db}
+                names_to_insert_in_db -= found_names
+
+        print(
+            f"    All {len(new_names)} names checked against DB. Found {len(new_names) - len(names_to_insert_in_db)} existing entries."
         )
 
-    # Retrieve the newly created IDs and update the cache.
-    new_df = con.execute(
-        f"SELECT {name_col}, {id_col} FROM {entity_type} WHERE {name_col} IN ({placeholders})",
-        list(new_names),
-    ).df()
-    for _, row in new_df.iterrows():
-        cache[row[name_col]] = row[id_col]
+        # 3. Insert any remaining new names into the database, again in chunks.
+        if names_to_insert_in_db:
+            names_to_insert_list = sorted(
+                list(names_to_insert_in_db)
+            )  # Sort for determinism
+            print(
+                f"    Found {len(names_to_insert_list)} new {entity_type} names to insert: {names_to_insert_list[:10]}..."
+            )
 
-    # --- DETAILED LOGGING START ---
-    print(f"    Cache updated for {entity_type}. Total items in cache: {len(cache)}")
-    # --- DETAILED LOGGING END ---
+            for i in range(0, len(names_to_insert_list), chunk_size):
+                chunk = names_to_insert_list[i : i + chunk_size]
+                if entity_type == "player":
+                    insert_data = [(name, extra_data.get(name)) for name in chunk]
+                    con.executemany(
+                        f"INSERT INTO {table_name} (name, title) VALUES (?, ?)",
+                        insert_data,
+                    )
+                else:  # opening
+                    insert_data = [
+                        (eco, extra_data.get(eco, "Unknown Opening")) for eco in chunk
+                    ]
+                    con.executemany(
+                        f"INSERT INTO {table_name} (eco, name) VALUES (?, ?)",
+                        insert_data,
+                    )
+
+            # 4. Fetch the new IDs and update the cache.
+            #    This is also chunked for safety, though the list of names to
+            #    query will be the same size as the insertion list.
+            for i in range(0, len(names_to_insert_list), chunk_size):
+                chunk = names_to_insert_list[i : i + chunk_size]
+                placeholders = ", ".join(["?"] * len(chunk))
+                newly_inserted = con.execute(
+                    f"SELECT {name_column}, {id_column} FROM {table_name} WHERE {name_column} IN ({placeholders})",
+                    chunk,
+                ).fetchall()
+
+                for name, entity_id in newly_inserted:
+                    cache[name] = entity_id
+
+            print(
+                f"    Cache updated for {entity_type}. Total items in cache: {len(cache)}"
+            )
 
 
 def process_batch(

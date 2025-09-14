@@ -53,12 +53,12 @@ def setup_database(con: duckdb.DuckDBPyConnection):
     con.execute("CREATE SEQUENCE IF NOT EXISTS player_id_seq START 1;")
     con.execute("CREATE SEQUENCE IF NOT EXISTS opening_id_seq START 1;")
 
-    # The player_name is UNIQUE to ensure we don't have duplicate player entries.
+    # The name is UNIQUE to ensure we don't have duplicate player entries.
     con.execute(
         """
         CREATE TABLE IF NOT EXISTS player (
-            player_id   INTEGER PRIMARY KEY DEFAULT nextval('player_id_seq'),
-            player_name VARCHAR UNIQUE NOT NULL,
+            id   INTEGER PRIMARY KEY DEFAULT nextval('player_id_seq'),
+            name VARCHAR UNIQUE NOT NULL,
             title       VARCHAR
         );
     """
@@ -68,7 +68,7 @@ def setup_database(con: duckdb.DuckDBPyConnection):
     con.execute(
         """
         CREATE TABLE IF NOT EXISTS opening (
-            opening_id  INTEGER PRIMARY KEY DEFAULT nextval('opening_id_seq'),
+            id  INTEGER PRIMARY KEY DEFAULT nextval('opening_id_seq'),
             eco         VARCHAR UNIQUE NOT NULL,
             name        VARCHAR NOT NULL
         );
@@ -89,8 +89,8 @@ def setup_database(con: duckdb.DuckDBPyConnection):
             num_draws   INTEGER DEFAULT 0,
             num_losses  INTEGER DEFAULT 0,
             PRIMARY KEY (player_id, opening_id, color),
-            FOREIGN KEY (player_id) REFERENCES player(player_id),
-            FOREIGN KEY (opening_id) REFERENCES opening(opening_id)
+            FOREIGN KEY (player_id) REFERENCES player(id),
+            FOREIGN KEY (opening_id) REFERENCES opening(id)
         );
     """
     )
