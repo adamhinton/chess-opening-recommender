@@ -2,8 +2,11 @@
 # This module is responsible for processing a single batch of chess games. It
 # filters games based on defined criteria, extracts relevant information, and
 # efficiently updates a DuckDB database with player and opening statistics.
-# The key design goal is to leverage DuckDB's SQL capabilities to perform these
-# updates in a highly vectorized and parallelized manner, maximizing throughput.
+#
+# Partitioning update (2025-09-14):
+#   - Aggregated stats are now routed to partitioned tables by ECO first letter (A-E, other)
+#   - A helper function determines the correct table for each ECO code
+#   - This improves write performance and future query flexibility
 # ----------------------------------------------------------------------------------
 
 import pandas as pd
@@ -22,6 +25,16 @@ from notebooks.utils.file_processing.types_and_classes import (  # noqa: E402
     PerformanceTracker,
 )
 
+def get_target_table(eco_code: str) -> str:
+    """
+    Returns the partitioned stats table name for a given ECO code.
+    A–E go to their own table, all others to 'other'.
+    """
+    first_letter = eco_code[0].upper() if eco_code else ""
+    if first_letter in "ABCDE":
+        return f"player_opening_stats_{first_letter}"
+    return "player_opening_stats_other"
+
 
 def process_batch(
     batch_df: pd.DataFrame,
@@ -32,12 +45,9 @@ def process_batch(
     """
     Process a batch of games and update the database with aggregated stats.
 
-    Steps:
-      1. Register batch as temp table
-      2. Filter valid games
-      3. Insert new players/openings
-      4. Aggregate stats
-      5. Bulk UPSERT into player_opening_stats
+    Partitioning update:
+    - After aggregation, split stats by ECO first letter and upsert into the correct table.
+    - This is done in SQL for efficiency.
     """
     if batch_df.empty:
         print("    Skipping empty batch.")
@@ -106,7 +116,7 @@ def process_batch(
     """
     )
 
-    # 4. Aggregate stats
+    # 4. Aggregate stats (with ECO code for partitioning)
     con.execute(
         """
         CREATE OR REPLACE TEMP TABLE aggregated_stats AS
@@ -115,6 +125,7 @@ def process_batch(
                 wp.id AS white_id,
                 bp.id AS black_id,
                 op.id AS opening_id,
+                op.eco AS eco_code,
                 CASE
                     WHEN g.Result = '1-0' THEN 'win'
                     WHEN g.Result = '0-1' THEN 'loss'
@@ -126,10 +137,10 @@ def process_batch(
             JOIN opening op ON g.ECO = op.eco
         ),
         unpivoted AS (
-            SELECT white_id AS player_id, opening_id, 'w' AS color, white_result AS result
+            SELECT white_id AS player_id, opening_id, eco_code, 'w' AS color, white_result AS result
             FROM game_results
             UNION ALL
-            SELECT black_id, opening_id, 'b',
+            SELECT black_id, opening_id, eco_code, 'b',
                 CASE
                     WHEN white_result = 'win' THEN 'loss'
                     WHEN white_result = 'loss' THEN 'win'
@@ -140,30 +151,37 @@ def process_batch(
         SELECT
             player_id,
             opening_id,
+            eco_code,
             color,
             COUNT(CASE WHEN result = 'win' THEN 1 END) AS wins,
             COUNT(CASE WHEN result = 'draw' THEN 1 END) AS draws,
             COUNT(CASE WHEN result = 'loss' THEN 1 END) AS losses
         FROM unpivoted
-        GROUP BY player_id, opening_id, color;
+        GROUP BY player_id, opening_id, eco_code, color;
     """
     )
 
-    # 5. Bulk UPSERT
-    con.execute(
-        """
-        INSERT INTO player_opening_stats (player_id, opening_id, color, num_wins, num_draws, num_losses)
-        SELECT player_id, opening_id, color, wins, draws, losses
-        FROM aggregated_stats
-        ON CONFLICT (player_id, opening_id, color) DO UPDATE SET
-            num_wins  = player_opening_stats.num_wins  + excluded.num_wins,
-            num_draws = player_opening_stats.num_draws + excluded.num_draws,
-            num_losses= player_opening_stats.num_losses+ excluded.num_losses;
-    """
-    )
+    # 5. Bulk UPSERT into each partitioned table
+    # For each partition, insert only the relevant rows
+    for letter in list("ABCDE") + ["other"]:
+        if letter == "other":
+            where_clause = "WHERE NOT (upper(left(eco_code, 1)) IN ('A','B','C','D','E'))"
+        else:
+            where_clause = f"WHERE upper(left(eco_code, 1)) = '{letter}'"
+        table = f"player_opening_stats_{letter}"
+        con.execute(f"""
+            INSERT INTO {table} (player_id, opening_id, color, num_wins, num_draws, num_losses)
+            SELECT player_id, opening_id, color, wins, draws, losses
+            FROM aggregated_stats
+            {where_clause}
+            ON CONFLICT (player_id, opening_id, color) DO UPDATE SET
+                num_wins  = {table}.num_wins  + excluded.num_wins,
+                num_draws = {table}.num_draws + excluded.num_draws,
+                num_losses= {table}.num_losses+ excluded.num_losses;
+        """)
 
     num_combos = con.execute("SELECT COUNT(*) FROM aggregated_stats").fetchone()[0]
     print(f"    Processed {num_valid_games:,} games.")
-    print(f"    Updated stats for {num_combos:,} player-opening combinations.")
+    print(f"    Updated stats for {num_combos:,} player-opening combinations (partitioned by ECO letter).")
 
     con.unregister(temp_table)

@@ -3,8 +3,11 @@
 # that stores all processed chess game statistics. It handles connection management
 # and initial schema setup, ensuring that the rest of the application can reliably
 # interact with a well-defined database structure.
-
-# We will be downloading large parquet files of raw games data, processing them, and saving the results to this locally-stored database.
+#
+# Partitioning update (2025-09-14):
+#   - The player_opening_stats table is now partitioned by ECO first letter (A-E, other)
+#   - A unifying view 'player_opening_stats' is created for compatibility and querying
+#   - All schema, constraints, and foreign keys are preserved in each partitioned table
 # ----------------------------------------------------------------------------------
 
 import duckdb
@@ -44,6 +47,10 @@ def setup_database(con: duckdb.DuckDBPyConnection):
       opening, playing as a specific color. This structure is highly efficient for
       both storage and querying.
 
+    Partitioning update:
+    - Creates 6 partitioned stats tables: player_opening_stats_A, ..., _E, _other
+    - Creates a unifying view 'player_opening_stats' for compatibility
+
     Args:
         con: An active DuckDB connection.
     """
@@ -75,23 +82,29 @@ def setup_database(con: duckdb.DuckDBPyConnection):
     """
     )
 
-    # This is the main statistics table.
-    # The PRIMARY KEY is a composite of player, opening, and color, ensuring one
-    # unique record for each combination.
-    # The CHECK constraint on 'color' ensures data integrity.
-    con.execute(
-        """
-        CREATE TABLE IF NOT EXISTS player_opening_stats (
-            player_id   INTEGER,
-            opening_id  INTEGER,
-            color       VARCHAR(1) NOT NULL CHECK (color IN ('w', 'b')),
-            num_wins    INTEGER DEFAULT 0,
-            num_draws   INTEGER DEFAULT 0,
-            num_losses  INTEGER DEFAULT 0,
-            PRIMARY KEY (player_id, opening_id, color),
-            FOREIGN KEY (player_id) REFERENCES player(id),
-            FOREIGN KEY (opening_id) REFERENCES opening(id)
-        );
-    """
-    )
-    print("Database tables are ready.")
+    # Partitioned stats tables (A-E, other)
+    for letter in list("ABCDE") + ["other"]:
+        table = f"player_opening_stats_{letter}"
+        con.execute(f"""
+            CREATE TABLE IF NOT EXISTS {table} (
+                player_id   INTEGER,
+                opening_id  INTEGER,
+                color       VARCHAR(1) NOT NULL CHECK (color IN ('w', 'b')),
+                num_wins    INTEGER DEFAULT 0,
+                num_draws   INTEGER DEFAULT 0,
+                num_losses  INTEGER DEFAULT 0,
+                PRIMARY KEY (player_id, opening_id, color),
+                FOREIGN KEY (player_id) REFERENCES player(id),
+                FOREIGN KEY (opening_id) REFERENCES opening(id)
+            );
+        """)
+
+    # Unifying view for compatibility and global queries
+    union_selects = "\nUNION ALL\n".join([
+        f"SELECT * FROM player_opening_stats_{letter}" for letter in list("ABCDE") + ["other"]
+    ])
+    con.execute(f"""
+        CREATE OR REPLACE VIEW player_opening_stats AS
+        {union_selects};
+    """)
+    print("Database tables and partitioned stats tables are ready.")
