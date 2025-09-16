@@ -126,13 +126,8 @@ def vacuum_and_optimize(con: duckdb.DuckDBPyConnection) -> float:
         The elapsed time in seconds for the operation.
     """
     start = time.time()
-    print("Running VACUUM and OPTIMIZE on all tables...")
+    print("Running VACUUM on the database...")
     con.execute("VACUUM;")
-    for letter in list("ABCDE") + ["other"]:
-        table = f"player_opening_stats_{letter}"
-        con.execute(f"OPTIMIZE {table};")
-    con.execute("OPTIMIZE player;")
-    con.execute("OPTIMIZE opening;")
     elapsed = time.time() - start
-    print(f"VACUUM and OPTIMIZE complete. Elapsed time: {elapsed:.2f} seconds.")
+    print(f"VACUUM complete. Elapsed time: {elapsed:.2f} seconds.")
     return elapsed
