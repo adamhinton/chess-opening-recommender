@@ -12,6 +12,7 @@
 
 import duckdb
 from pathlib import Path
+import time
 
 
 def get_db_connection(db_path: str | Path) -> duckdb.DuckDBPyConnection:
@@ -85,7 +86,8 @@ def setup_database(con: duckdb.DuckDBPyConnection):
     # Partitioned stats tables (A-E, other)
     for letter in list("ABCDE") + ["other"]:
         table = f"player_opening_stats_{letter}"
-        con.execute(f"""
+        con.execute(
+            f"""
             CREATE TABLE IF NOT EXISTS {table} (
                 player_id   INTEGER,
                 opening_id  INTEGER,
@@ -97,14 +99,40 @@ def setup_database(con: duckdb.DuckDBPyConnection):
                 FOREIGN KEY (player_id) REFERENCES player(id),
                 FOREIGN KEY (opening_id) REFERENCES opening(id)
             );
-        """)
+        """
+        )
 
     # Unifying view for compatibility and global queries
-    union_selects = "\nUNION ALL\n".join([
-        f"SELECT * FROM player_opening_stats_{letter}" for letter in list("ABCDE") + ["other"]
-    ])
-    con.execute(f"""
+    union_selects = "\nUNION ALL\n".join(
+        [
+            f"SELECT * FROM player_opening_stats_{letter}"
+            for letter in list("ABCDE") + ["other"]
+        ]
+    )
+    con.execute(
+        f"""
         CREATE OR REPLACE VIEW player_opening_stats AS
         {union_selects};
-    """)
+    """
+    )
     print("Database tables and partitioned stats tables are ready.")
+
+
+def vacuum_and_optimize(con: duckdb.DuckDBPyConnection) -> float:
+    """
+    Reclaims disk space and optimizes storage for all tables in the database.
+
+    Returns:
+        The elapsed time in seconds for the operation.
+    """
+    start = time.time()
+    print("Running VACUUM and OPTIMIZE on all tables...")
+    con.execute("VACUUM;")
+    for letter in list("ABCDE") + ["other"]:
+        table = f"player_opening_stats_{letter}"
+        con.execute(f"OPTIMIZE {table};")
+    con.execute("OPTIMIZE player;")
+    con.execute("OPTIMIZE opening;")
+    elapsed = time.time() - start
+    print(f"VACUUM and OPTIMIZE complete. Elapsed time: {elapsed:.2f} seconds.")
+    return elapsed

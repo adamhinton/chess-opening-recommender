@@ -118,6 +118,13 @@ def process_parquet_file(
         for key, value in summary.items():
             print(f"  {key}: {value}")
 
+        # Run VACUUM and OPTIMIZE, and print elapsed time
+        # This optimizes the db, keeping it as lean as possible after each file is done processing.
+        from notebooks.utils.database.db_utils import vacuum_and_optimize
+
+        vacuum_time = vacuum_and_optimize(db_con)
+        print(f"VACUUM and OPTIMIZE took {vacuum_time:.2f} seconds for this file.")
+
         return True
     except Exception as e:
         print(f"An error occurred during file processing: {e}")
