@@ -175,7 +175,9 @@ def process_batch(
 
     # Measure bulk upsert into partitioned tables
     start_time = time.time()
+    partition_timing_details = {}
     for letter in list("ABCDE") + ["other"]:
+        partition_start_time = time.time()
         if letter == "other":
             where_clause = (
                 "WHERE NOT (upper(left(eco_code, 1)) IN ('A','B','C','D','E'))"
@@ -193,9 +195,16 @@ def process_batch(
                 num_wins  = {table}.num_wins  + excluded.num_wins,
                 num_draws = {table}.num_draws + excluded.num_draws,
                 num_losses= {table}.num_losses+ excluded.num_losses;
-        """
+            """
         )
+        partition_timing_details[letter] = time.time() - partition_start_time
+
     timing_details["bulk_upsert"] = time.time() - start_time
+
+    # Log partition-specific timing details
+    print("\n--- Partition Timing Metrics ---")
+    for partition, duration in partition_timing_details.items():
+        print(f"Partition {partition}: {duration:.2f}s")
 
     num_combos = con.execute("SELECT COUNT(*) FROM aggregated_stats").fetchone()[0]
     print(f"    Processed {num_valid_games:,} games.")
