@@ -14,6 +14,7 @@ import duckdb
 from typing import Optional
 import sys
 from pathlib import Path
+import time
 
 # Ensure the project root is in the system path to allow for absolute imports.
 project_root = Path(__file__).resolve().parents[3]
@@ -50,6 +51,7 @@ def process_batch(
     - After aggregation, split stats by ECO first letter and upsert into the correct table.
     - This is done in SQL for efficiency.
     """
+    timing_details = {}
     if batch_df.empty:
         print("    Skipping empty batch.")
         return
@@ -57,9 +59,11 @@ def process_batch(
     temp_table = "raw_games_batch"
     con.register(temp_table, batch_df)
 
+    start_time = time.time()
     time_control_pattern = "|".join(tc.lower() for tc in config.allowed_time_controls)
 
-    # 1. Filter valid games
+    # Measure filtering valid games
+    start_time = time.time()
     con.execute(
         f"""
         CREATE OR REPLACE TEMP TABLE valid_games AS
@@ -76,6 +80,7 @@ def process_batch(
             AND White IS NOT NULL AND Black IS NOT NULL AND ECO IS NOT NULL;
     """
     )
+    timing_details["filter_valid_games"] = time.time() - start_time
 
     num_valid_games = con.execute("SELECT COUNT(*) FROM valid_games").fetchone()[0]
 
@@ -88,7 +93,8 @@ def process_batch(
         con.unregister(temp_table)
         return
 
-    # 2. Extract unique players & openings
+    # Measure extracting unique players & openings
+    start_time = time.time()
     con.execute(
         """
         CREATE OR REPLACE TEMP TABLE batch_players AS
@@ -100,8 +106,10 @@ def process_batch(
             SELECT DISTINCT ECO AS eco, Opening AS name FROM valid_games;
     """
     )
+    timing_details["extract_players_openings"] = time.time() - start_time
 
-    # 3. Insert new entities
+    # Measure inserting new entities
+    start_time = time.time()
     con.execute(
         """
         INSERT INTO player (name, title)
@@ -116,8 +124,10 @@ def process_batch(
         ON CONFLICT(eco, name) DO NOTHING;
     """
     )
+    timing_details["insert_entities"] = time.time() - start_time
 
-    # 4. Aggregate stats (with ECO code for partitioning)
+    # Measure aggregating stats
+    start_time = time.time()
     con.execute(
         """
         CREATE OR REPLACE TEMP TABLE aggregated_stats AS
@@ -161,9 +171,10 @@ def process_batch(
         GROUP BY player_id, opening_id, eco_code, color;
     """
     )
+    timing_details["aggregate_stats"] = time.time() - start_time
 
-    # 5. Bulk UPSERT into each partitioned table
-    # For each partition, insert only the relevant rows
+    # Measure bulk upsert into partitioned tables
+    start_time = time.time()
     for letter in list("ABCDE") + ["other"]:
         if letter == "other":
             where_clause = (
@@ -184,6 +195,7 @@ def process_batch(
                 num_losses= {table}.num_losses+ excluded.num_losses;
         """
         )
+    timing_details["bulk_upsert"] = time.time() - start_time
 
     num_combos = con.execute("SELECT COUNT(*) FROM aggregated_stats").fetchone()[0]
     print(f"    Processed {num_valid_games:,} games.")
@@ -192,3 +204,8 @@ def process_batch(
     )
 
     con.unregister(temp_table)
+
+    # Print timing details
+    print("\n--- Batch Timing Metrics ---")
+    for step, duration in timing_details.items():
+        print(f"{step}: {duration:.2f}s")

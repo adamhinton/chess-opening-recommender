@@ -25,6 +25,7 @@ from notebooks.utils.file_processing.process_game_batch import (
     process_batch,
 )  # noqa: E402
 from notebooks.utils.database.db_utils import get_db_connection  # noqa: E402
+from notebooks.utils.database.db_utils import vacuum_and_optimize  # noqa: E402
 
 
 def process_parquet_file(
@@ -48,17 +49,19 @@ def process_parquet_file(
         True if the file was processed successfully, False otherwise.
     """
     db_con = None
+    timing_details = {}
     try:
         # Establish a single database connection for the entire file.
         db_con = get_db_connection(config.db_path)
         perf_tracker = PerformanceTracker()
 
-        # Use a temporary DuckDB connection to get metadata about the file.
-        # This avoids loading the whole file into memory.
+        # Measure metadata retrieval time
+        start_time = time.time()
         with duckdb.connect() as temp_con:
             total_rows = temp_con.execute(
                 f"SELECT COUNT(*) FROM '{config.parquet_path}' WHERE ECO IS NOT NULL"
             ).fetchone()[0]
+        timing_details["metadata_retrieval"] = time.time() - start_time
 
         if total_rows == 0:
             print("File is empty, skipping.")
@@ -79,6 +82,8 @@ def process_parquet_file(
 
             perf_tracker.start_batch()
 
+            # Measure batch query time
+            start_time = time.time()
             # Read a batch from the parquet file.
             # Excluding 'movetext' saves significant memory and processing time.
             batch_query = f"SELECT * EXCLUDE(Site, UTCDate, UTCTime, movetext) FROM '{config.parquet_path}' WHERE ECO IS NOT NULL LIMIT {config.batch_size} OFFSET {offset}"
@@ -87,17 +92,23 @@ def process_parquet_file(
             # with the main DB connection, though this is largely a precaution.
             with duckdb.connect() as read_con:
                 batch_df = read_con.execute(batch_query).df()
+            timing_details[f"batch_query_{batch_num + 1}"] = time.time() - start_time
 
             if batch_df.empty:
                 print("    Skipping empty batch.")
                 continue
 
+            # Measure batch processing time
+            start_time = time.time()
             # Hand off the batch to the core processing function.
             process_batch(
                 batch_df=batch_df,
                 con=db_con,
                 config=config,
                 perf_tracker=perf_tracker,
+            )
+            timing_details[f"batch_processing_{batch_num + 1}"] = (
+                time.time() - start_time
             )
 
             batch_time = perf_tracker.end_batch(len(batch_df))
@@ -118,10 +129,11 @@ def process_parquet_file(
         for key, value in summary.items():
             print(f"  {key}: {value}")
 
-        # Run VACUUM and print elapsed time
-        from notebooks.utils.database.db_utils import vacuum_and_optimize
-
+        # Measure VACUUM time
+        start_time = time.time()
         vacuum_time = vacuum_and_optimize(db_con)
+        timing_details["vacuum"] = time.time() - start_time
+
         print(f"VACUUM took {vacuum_time:.2f} seconds for this file.")
 
         return True
@@ -134,3 +146,7 @@ def process_parquet_file(
         if db_con:
             db_con.close()
             print("Database connection closed.")
+        # Print timing details
+        print("\n--- Detailed Timing Metrics ---")
+        for step, duration in timing_details.items():
+            print(f"{step}: {duration:.2f}s")
