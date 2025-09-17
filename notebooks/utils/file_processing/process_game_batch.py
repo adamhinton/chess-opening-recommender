@@ -25,6 +25,7 @@ from notebooks.utils.file_processing.types_and_classes import (  # noqa: E402
     PerformanceTracker,
 )
 
+
 def get_target_table(eco_code: str) -> str:
     """
     Returns the partitioned stats table name for a given ECO code.
@@ -112,7 +113,7 @@ def process_batch(
         """
         INSERT INTO opening (eco, name)
         SELECT eco, name FROM batch_openings
-        ON CONFLICT(eco) DO NOTHING;
+        ON CONFLICT(eco, name) DO NOTHING;
     """
     )
 
@@ -134,7 +135,7 @@ def process_batch(
             FROM valid_games g
             JOIN player wp ON g.White = wp.name
             JOIN player bp ON g.Black = bp.name
-            JOIN opening op ON g.ECO = op.eco
+            JOIN opening op ON g.ECO = op.eco AND g.Opening = op.name
         ),
         unpivoted AS (
             SELECT white_id AS player_id, opening_id, eco_code, 'w' AS color, white_result AS result
@@ -165,11 +166,14 @@ def process_batch(
     # For each partition, insert only the relevant rows
     for letter in list("ABCDE") + ["other"]:
         if letter == "other":
-            where_clause = "WHERE NOT (upper(left(eco_code, 1)) IN ('A','B','C','D','E'))"
+            where_clause = (
+                "WHERE NOT (upper(left(eco_code, 1)) IN ('A','B','C','D','E'))"
+            )
         else:
             where_clause = f"WHERE upper(left(eco_code, 1)) = '{letter}'"
         table = f"player_opening_stats_{letter}"
-        con.execute(f"""
+        con.execute(
+            f"""
             INSERT INTO {table} (player_id, opening_id, color, num_wins, num_draws, num_losses)
             SELECT player_id, opening_id, color, wins, draws, losses
             FROM aggregated_stats
@@ -178,10 +182,13 @@ def process_batch(
                 num_wins  = {table}.num_wins  + excluded.num_wins,
                 num_draws = {table}.num_draws + excluded.num_draws,
                 num_losses= {table}.num_losses+ excluded.num_losses;
-        """)
+        """
+        )
 
     num_combos = con.execute("SELECT COUNT(*) FROM aggregated_stats").fetchone()[0]
     print(f"    Processed {num_valid_games:,} games.")
-    print(f"    Updated stats for {num_combos:,} player-opening combinations (partitioned by ECO letter).")
+    print(
+        f"    Updated stats for {num_combos:,} player-opening combinations (partitioned by ECO letter)."
+    )
 
     con.unregister(temp_table)

@@ -72,13 +72,14 @@ def setup_database(con: duckdb.DuckDBPyConnection):
     """
     )
 
-    # The ECO code is the unique identifier for an opening.
+    # The ECO code and name combination is the unique identifier for an opening.
     con.execute(
         """
         CREATE TABLE IF NOT EXISTS opening (
             id  INTEGER PRIMARY KEY DEFAULT nextval('opening_id_seq'),
-            eco         VARCHAR UNIQUE,
-            name        VARCHAR
+            eco         VARCHAR,
+            name        VARCHAR,
+            UNIQUE(eco, name)
         );
     """
     )
