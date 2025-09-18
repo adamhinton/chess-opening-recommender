@@ -72,3 +72,20 @@ At the top of a file, there should be general comments explaining the purpose of
 
 Utils:
 I like utils files. As of 8.26.25, we've been piling stuff into all the same notebooks; let's start abstracting reusable logic out to utils where it's possible and makes sense.
+
+Notes:
+
+- Right now (9.18.25), we are in the data collection and organization phase.
+
+Data collection/processing:
+
+- I ideally want to process about a billion chess games. That's making big problems because storage and processing becomes very time consuming at that scale.
+- We're creating local duckdb files. We download 1GB (1.4 million games) parquet files, process them and store data at a player-level per opening.
+- We're partitioning our tables by ECO code, one each for A-E and Other.
+- But even with the partitions, upserts slow down dramatically; we start at about 110k games/second, and by even the fifth parquet file it's cut in half. Since we need about 1000 parquet files, that's a problem.
+- So that's what we're working on right now.
+
+Note that #09_better_downloading.ipynb is the main processing pipeline as of 9.18.25. That's the one we're most focused on. Notify me if we've moved on to another notebook and this instruction is still there.
+
+Specs for chanigng code:
+Follow my conventions. Helper functions, comments explaining the why more than the what, docstrings, readmes at top of files. Make sure this is all thoroughly documented. When making change, don't say "we made this change", just act like it's always been that way.
