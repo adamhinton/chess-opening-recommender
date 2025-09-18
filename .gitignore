@@ -13,3 +13,4 @@ __pycache__/
 *.db.wal
 chess_games.db.wal
 chess_games.db
+copilot-instructions.md
