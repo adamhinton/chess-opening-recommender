@@ -3,11 +3,11 @@
 # filters games based on defined criteria, extracts relevant information, and
 # efficiently updates a DuckDB database with player and opening statistics.
 #
-# Partitioning update (2025-09-14):
-#   - Aggregated stats are now routed to partitioned tables by ECO first letter (A-E, other)
+#   Aggregated stats are routed to partitioned tables by ECO first letter (A-E, other)
 #   - A helper function determines the correct table for each ECO code
 #   - This improves write performance and future query flexibility
-# ----------------------------------------------------------------------------------
+
+# Note: WHen a player already has stats for a given opening, we update the existing row rather than inserting a new one. So we add to rows such as num_losses etc. -------------------------------------------------------------
 
 import pandas as pd
 import duckdb
@@ -47,7 +47,6 @@ def process_batch(
     """
     Process a batch of games and update the database with aggregated stats.
 
-    Partitioning update:
     - After aggregation, split stats by ECO first letter and upsert into the correct table.
     - This is done in SQL for efficiency.
     """
@@ -173,7 +172,7 @@ def process_batch(
     )
     timing_details["aggregate_stats"] = time.time() - start_time
 
-    # Measure bulk upsert into partitioned tables
+    # Measure time taken for bulk upsert into partitioned tables
     start_time = time.time()
     partition_timing_details = {}
     for letter in list("ABCDE") + ["other"]:
@@ -201,7 +200,6 @@ def process_batch(
 
     timing_details["bulk_upsert"] = time.time() - start_time
 
-    # Log partition-specific timing details
     print("\n--- Partition Timing Metrics ---")
     for partition, duration in partition_timing_details.items():
         print(f"Partition {partition}: {duration:.2f}s")
@@ -214,7 +212,6 @@ def process_batch(
 
     con.unregister(temp_table)
 
-    # Print timing details
     print("\n--- Batch Timing Metrics ---")
     for step, duration in timing_details.items():
         print(f"{step}: {duration:.2f}s")

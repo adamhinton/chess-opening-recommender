@@ -4,9 +4,12 @@
 # and initial schema setup, ensuring that the rest of the application can reliably
 # interact with a well-defined database structure.
 #
+# The overarching idea here is to measure players' performances with different openingss, so that the chess opening recommender can suggest the best openings for a player based on their past games.
+
+# This will be fed to our AI model on a per-player basis, so it can learn from the player's historical data.
+
 # Partitioning update (2025-09-14):
 #   - The player_opening_stats table is now partitioned by ECO first letter (A-E, other)
-#   - A unifying view 'player_opening_stats' is created for compatibility and querying
 #   - All schema, constraints, and foreign keys are preserved in each partitioned table
 # ----------------------------------------------------------------------------------
 
