@@ -22,7 +22,15 @@ def get_parquet_file_names(year: int, month: int) -> list[str]:
         month: An integer representing the month (1-12).
     Returns:
         A list of parquet file names for the specified year and month.
+    Raises:
+        ValueError: If the month is not between 1 and 12, or the year is not between 2010 and 2026.
     """
+    # Validate inputs
+    if not (1 <= month <= 12):
+        raise ValueError(f"Invalid month: {month}. Month must be between 1 and 12.")
+    if not (2010 <= year <= 2026):
+        raise ValueError(f"Invalid year: {year}. Year must be between 2010 and 2026.")
+
     # Initialize the HuggingFace API
     api = HfApi()
 
