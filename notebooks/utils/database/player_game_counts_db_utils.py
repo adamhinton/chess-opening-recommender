@@ -119,27 +119,7 @@ def is_file_already_downloaded(
     return result is not None
 
 
-def update_player_game_count(
-    con: duckdb.DuckDBPyConnection, username: str, num_games: int
-) -> None:
-    """
-    Updates the game count for a player. If the player does not exist, they are added.
-
-    Args:
-        con: An active DuckDB connection.
-        username: The username of the player.
-        num_games: The number of games to add to the player's total.
-    """
-    con.execute(
-        """
-        INSERT INTO player_game_counts (username, num_games)
-        VALUES (?, ?)
-        ON CONFLICT(username) DO UPDATE SET
-            num_games = player_game_counts.num_games + excluded.num_games;
-        """,
-        (username, num_games),
-    )
-
+def update_all_player_game_counts():
 
 def vacuum_and_optimize(con: duckdb.DuckDBPyConnection) -> float:
     """
