@@ -139,7 +139,6 @@ def update_player_game_count(
         """,
         (username, num_games),
     )
-    print(f"Updated game count for {username}: +{num_games} games")
 
 
 def vacuum_and_optimize(con: duckdb.DuckDBPyConnection) -> float:
