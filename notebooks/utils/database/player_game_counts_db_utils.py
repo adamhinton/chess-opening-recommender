@@ -25,10 +25,10 @@
 # Usage:
 # - Call `setup_player_game_counts_table` to initialize the database schema.
 # - Use `record_file_download` and `is_file_already_downloaded` to manage file tracking.
-# - Use `update_player_game_count` to update the game counts for players.
+# - Use `update_all_player_game_counts` to update the game counts for players.
 # ----------------------------------------------------------------------------------
 
-from typing import Optional
+import pandas as pd
 import duckdb
 import time
 
@@ -119,7 +119,43 @@ def is_file_already_downloaded(
     return result is not None
 
 
-def update_all_player_game_counts():
+def update_all_player_game_counts(
+    con: duckdb.DuckDBPyConnection, player_counts_df: pd.DataFrame
+) -> None:
+    """
+    Bulk updates the game counts for all players in the given DataFrame.
+
+    This function first registers the DataFrame as a temporary table in DuckDB,
+    then uses a single SQL statement to insert new players or update the
+    game counts for existing ones. This is significantly faster than updating
+    row by row.
+
+    Args:
+        con: An active DuckDB connection.
+        player_counts_df: A pandas DataFrame with 'player' and 'num_games' columns.
+    """
+    if player_counts_df.empty:
+        print("Player counts DataFrame is empty. No updates to perform.")
+        return
+
+    # Register the DataFrame as a temporary view in DuckDB
+    con.register("player_counts_view", player_counts_df)
+
+    # Use INSERT ... ON CONFLICT to bulk update
+    con.execute(
+        """
+        INSERT INTO player_game_counts (username, num_games)
+        SELECT player, num_games FROM player_counts_view
+        ON CONFLICT(username) DO UPDATE SET
+            num_games = player_game_counts.num_games + excluded.num_games;
+        """
+    )
+
+    # Unregister the view to clean up
+    con.unregister("player_counts_view")
+
+    print(f"Successfully updated game counts for {len(player_counts_df)} players.")
+
 
 def vacuum_and_optimize(con: duckdb.DuckDBPyConnection) -> float:
     """
