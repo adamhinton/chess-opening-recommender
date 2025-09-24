@@ -142,6 +142,7 @@ def update_all_player_game_counts(
     con.register("player_counts_view", player_counts_df)
 
     # Use INSERT ... ON CONFLICT to bulk update
+    # NOTE that later, in notebook 15, we added an is_eligibile_acccount boolean column
     con.execute(
         """
         INSERT INTO player_game_counts (username, num_games)
