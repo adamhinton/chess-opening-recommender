@@ -97,6 +97,22 @@ def record_file_download(
     print(f"Recorded download: {file_name} ({year}-{month})")
 
 
+def get_eligible_players(con: duckdb.DuckDBPyConnection) -> pd.DataFrame:
+    """
+    Retrieves players whose is_eligible_account is True
+    Should be about 274k players unless we change things later.
+    """
+    df = con.execute(
+        """
+        SELECT username, num_games FROM player_game_counts
+        WHERE is_eligible_account = TRUE;
+        """
+    ).fetchdf()
+
+    print(f"Retrieved {len(df)} eligible players from the database.")
+    return df
+
+
 def is_file_already_downloaded(
     con: duckdb.DuckDBPyConnection, file_name: str, year: int, month: int
 ) -> bool:
