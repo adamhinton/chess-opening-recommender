@@ -26,6 +26,9 @@
 # - Call `setup_player_game_counts_table` to initialize the database schema.
 # - Use `record_file_download` and `is_file_already_downloaded` to manage file tracking.
 # - Use `update_all_player_game_counts` to update the game counts for players.
+#
+#
+# Note to self when I accidentally delete this db: I'm saving backups of it in both the local repo, and Documents/chess-opening-recommender-backups
 # ----------------------------------------------------------------------------------
 
 import pandas as pd
