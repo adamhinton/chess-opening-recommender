@@ -97,6 +97,26 @@ def record_file_download(
     print(f"Recorded download: {file_name} ({year}-{month})")
 
 
+def get_eligible_player_usernames(con: duckdb.DuckDBPyConnection) -> set[str]:
+    """
+    Retrieves a set of usernames for players marked as eligible.
+
+    This is used to create a fast lookup set for filtering games.
+
+    Args:
+        con: An active DuckDB connection.
+
+    Returns:
+        A set of eligible player usernames.
+    """
+    df = con.execute(
+        "SELECT username FROM player_game_counts WHERE is_eligible_account = TRUE;"
+    ).fetchdf()
+    usernames = set(df["username"].tolist())
+    print(f"Retrieved {len(usernames):,} eligible players from the database.")
+    return usernames
+
+
 def get_eligible_players(con: duckdb.DuckDBPyConnection) -> pd.DataFrame:
     """
     Retrieves players whose is_eligible_account is True

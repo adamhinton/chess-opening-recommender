@@ -30,6 +30,7 @@ from notebooks.utils.database.db_utils import vacuum_and_optimize  # noqa: E402
 
 def process_parquet_file(
     config: ProcessingConfig,
+    eligible_players: set[str],
     file_context: Optional[Dict] = None,
 ) -> bool:
     """
@@ -42,6 +43,7 @@ def process_parquet_file(
 
     Args:
         config: The configuration object for this specific file processing job.
+        eligible_players: A set of players eligible for processing.
         file_context: An optional dictionary containing context for multi-file
                       processing runs, used for logging and ETA calculations.
 
@@ -105,6 +107,7 @@ def process_parquet_file(
                 batch_df=batch_df,
                 con=db_con,
                 config=config,
+                eligible_players=eligible_players,
                 perf_tracker=perf_tracker,
             )
             timing_details[f"batch_processing_{batch_num + 1}"] = (

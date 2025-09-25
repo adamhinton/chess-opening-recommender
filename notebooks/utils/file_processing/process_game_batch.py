@@ -42,6 +42,7 @@ def process_batch(
     batch_df: pd.DataFrame,
     con: duckdb.DuckDBPyConnection,
     config: ProcessingConfig,
+    eligible_players: set[str],
     perf_tracker: Optional[PerformanceTracker] = None,
 ) -> None:
     """
@@ -58,6 +59,10 @@ def process_batch(
     temp_table = "raw_games_batch"
     con.register(temp_table, batch_df)
 
+    # Register the set of eligible players as a temporary view for fast SQL lookups.
+    eligible_players_df = pd.DataFrame(list(eligible_players), columns=["username"])
+    con.register("eligible_players_view", eligible_players_df)
+
     start_time = time.time()
     time_control_pattern = "|".join(tc.lower() for tc in config.allowed_time_controls)
 
@@ -69,7 +74,8 @@ def process_batch(
         SELECT *
         FROM {temp_table}
         WHERE
-            (WhiteTitle IS NULL OR WhiteTitle NOT LIKE '%%BOT%%')
+            (White IN (SELECT username FROM eligible_players_view) OR Black IN (SELECT username FROM eligible_players_view))
+            AND (WhiteTitle IS NULL OR WhiteTitle NOT LIKE '%%BOT%%')
             AND (BlackTitle IS NULL OR BlackTitle NOT LIKE '%%BOT%%')
             AND WhiteElo >= {config.min_player_rating}
             AND BlackElo >= {config.min_player_rating}
@@ -90,6 +96,7 @@ def process_batch(
     if num_valid_games == 0:
         print("    No valid games in this batch after filtering.")
         con.unregister(temp_table)
+        con.unregister("eligible_players_view")
         return
 
     # Measure extracting unique players & openings
@@ -211,6 +218,7 @@ def process_batch(
     )
 
     con.unregister(temp_table)
+    con.unregister("eligible_players_view")
 
     print("\n--- Batch Timing Metrics ---")
     for step, duration in timing_details.items():
