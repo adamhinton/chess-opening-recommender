@@ -104,9 +104,12 @@ def process_batch(
     con.execute(
         """
         CREATE OR REPLACE TEMP TABLE batch_players AS
-            SELECT DISTINCT White AS name, WhiteTitle AS title FROM valid_games
-            UNION ALL
-            SELECT DISTINCT Black AS name, BlackTitle AS title FROM valid_games;
+            SELECT DISTINCT name, title FROM (
+                SELECT White AS name, WhiteTitle AS title FROM valid_games
+                UNION ALL
+                SELECT Black AS name, BlackTitle AS title FROM valid_games
+            ) AS all_players
+            WHERE name IN (SELECT username FROM eligible_players_view);
 
         CREATE OR REPLACE TEMP TABLE batch_openings AS
             SELECT DISTINCT ECO AS eco, Opening AS name FROM valid_games;
@@ -149,8 +152,8 @@ def process_batch(
                     ELSE 'draw'
                 END AS white_result
             FROM valid_games g
-            JOIN player wp ON g.White = wp.name
-            JOIN player bp ON g.Black = bp.name
+            LEFT JOIN player wp ON g.White = wp.name
+            LEFT JOIN player bp ON g.Black = bp.name
             JOIN opening op ON g.ECO = op.eco AND g.Opening = op.name
         ),
         unpivoted AS (
@@ -174,6 +177,7 @@ def process_batch(
             COUNT(CASE WHEN result = 'draw' THEN 1 END) AS draws,
             COUNT(CASE WHEN result = 'loss' THEN 1 END) AS losses
         FROM unpivoted
+        WHERE player_id IS NOT NULL
         GROUP BY player_id, opening_id, eco_code, color;
     """
     )
