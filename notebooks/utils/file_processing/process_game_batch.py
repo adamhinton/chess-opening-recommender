@@ -46,29 +46,21 @@ def process_batch(
     eligible_players: set[str],
     perf_tracker: Optional[PerformanceTracker] = None,
 ) -> None:
-    print("[process_batch] Starting batch processing...")
     timing_details = {}
     if batch_df.empty:
         print("    Skipping empty batch.")
         return
 
     temp_table = "raw_games_batch"
-    print(
-        f"[process_batch] Registering temp table: {temp_table} with {len(batch_df)} rows"
-    )
     con.register(temp_table, batch_df)
 
     eligible_players_df = pd.DataFrame(list(eligible_players), columns=["username"])
-    print(
-        f"[process_batch] Registering eligible_players_view with {len(eligible_players_df)} usernames"
-    )
     con.register("eligible_players_view", eligible_players_df)
 
     start_time = time.time()
     time_control_pattern = "|".join(tc.lower() for tc in config.allowed_time_controls)
 
     # Filtering valid games
-    print("[process_batch] Filtering valid games...")
     try:
         con.execute(
             f"""
@@ -94,7 +86,6 @@ def process_batch(
     timing_details["filter_valid_games"] = time.time() - start_time
 
     num_valid_games = con.execute("SELECT COUNT(*) FROM valid_games").fetchone()[0]
-    print(f"[process_batch] Valid games after filtering: {num_valid_games}")
 
     if perf_tracker:
         perf_tracker.accepted_games += num_valid_games
@@ -107,7 +98,6 @@ def process_batch(
         return
 
     # Extracting unique players & openings
-    print("[process_batch] Extracting unique players and openings...")
     start_time = time.time()
     try:
         con.execute(
@@ -131,7 +121,6 @@ def process_batch(
     timing_details["extract_players_openings"] = time.time() - start_time
 
     # Inserting new entities
-    print("[process_batch] Inserting new players and openings...")
     start_time = time.time()
     try:
         # Insert new players with explicit id
@@ -196,7 +185,6 @@ def process_batch(
     except Exception as e:
         print("[ERROR] Inserting players/openings failed:", e)
         traceback.print_exc()
-        print("[process_batch] Table schemas at error time:")
         player_schema = con.execute("DESCRIBE player").fetchall()
         for col in player_schema:
             print(f"  {col[0]}: {col[1]}")
@@ -207,7 +195,6 @@ def process_batch(
     timing_details["insert_entities"] = time.time() - start_time
 
     # Aggregating stats
-    print("[process_batch] Aggregating stats...")
     start_time = time.time()
     try:
         con.execute(
@@ -261,7 +248,6 @@ def process_batch(
     timing_details["aggregate_stats"] = time.time() - start_time
 
     # Bulk upsert into partitioned tables
-    print("[process_batch] Bulk upsert into partitioned tables...")
     start_time = time.time()
     partition_timing_details = {}
     for letter in list("ABCDE") + ["other"]:
@@ -273,14 +259,11 @@ def process_batch(
         else:
             where_clause = f"WHERE upper(left(eco_code, 1)) = '{letter}'"
         table = f"player_opening_stats_{letter}"
-        print(f"[process_batch] Upserting partition '{letter}' into table {table}...")
         try:
             row_count = con.execute(
                 f"SELECT COUNT(*) FROM aggregated_stats {where_clause}"
             ).fetchone()[0]
-            print(
-                f"[process_batch] Partition '{letter}' has {row_count} rows to upsert."
-            )
+
             upsert_sql = f"""
                 INSERT INTO {table} (player_id, opening_id, color, num_wins, num_draws, num_losses)
                 SELECT player_id, opening_id, color, wins, draws, losses
@@ -291,19 +274,12 @@ def process_batch(
                     num_draws = {table}.num_draws + excluded.num_draws,
                     num_losses= {table}.num_losses+ excluded.num_losses;
             """
-            print(
-                f"[process_batch] Executing upsert SQL for partition '{letter}':\n{upsert_sql}"
-            )
             con.execute(upsert_sql)
         except Exception as e:
             print(f"[ERROR] Upsert failed for partition '{letter}':", e)
             traceback.print_exc()
-            print(f"[process_batch] Upsert SQL that failed:\n{upsert_sql}")
             raise
         partition_timing_details[letter] = time.time() - partition_start_time
-        print(
-            f"[process_batch] Finished upsert for partition '{letter}' in {partition_timing_details[letter]:.2f}s."
-        )
 
     timing_details["bulk_upsert"] = time.time() - start_time
 
