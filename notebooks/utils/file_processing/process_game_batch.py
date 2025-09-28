@@ -134,6 +134,14 @@ def process_batch(
     print("[process_batch] Inserting new players and openings...")
     start_time = time.time()
     try:
+        print("[process_batch] About to insert players. Table schema:")
+        player_schema = con.execute("DESCRIBE player").fetchall()
+        for col in player_schema:
+            print(f"  {col[0]}: {col[1]}")
+        print("[process_batch] About to insert openings. Table schema:")
+        opening_schema = con.execute("DESCRIBE opening").fetchall()
+        for col in opening_schema:
+            print(f"  {col[0]}: {col[1]}")
         con.execute(
             """
             INSERT INTO player (name, title)
@@ -151,6 +159,13 @@ def process_batch(
     except Exception as e:
         print("[ERROR] Inserting players/openings failed:", e)
         traceback.print_exc()
+        print("[process_batch] Table schemas at error time:")
+        player_schema = con.execute("DESCRIBE player").fetchall()
+        for col in player_schema:
+            print(f"  {col[0]}: {col[1]}")
+        opening_schema = con.execute("DESCRIBE opening").fetchall()
+        for col in opening_schema:
+            print(f"  {col[0]}: {col[1]}")
         raise
     timing_details["insert_entities"] = time.time() - start_time
 
