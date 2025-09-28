@@ -134,27 +134,64 @@ def process_batch(
     print("[process_batch] Inserting new players and openings...")
     start_time = time.time()
     try:
-        print("[process_batch] About to insert players. Table schema:")
-        player_schema = con.execute("DESCRIBE player").fetchall()
-        for col in player_schema:
-            print(f"  {col[0]}: {col[1]}")
-        print("[process_batch] About to insert openings. Table schema:")
-        opening_schema = con.execute("DESCRIBE opening").fetchall()
-        for col in opening_schema:
-            print(f"  {col[0]}: {col[1]}")
+        # Insert new players with explicit id
         con.execute(
             """
-            INSERT INTO player (name, title)
-            SELECT name, title FROM batch_players
-            ON CONFLICT(name) DO NOTHING;
-            """
+            CREATE OR REPLACE TEMP TABLE new_players AS
+            SELECT bp.name, bp.title
+            FROM batch_players bp
+            LEFT JOIN player p ON bp.name = p.name
+            WHERE p.name IS NULL;
+        """
+        )
+        next_player_id = con.execute(
+            "SELECT COALESCE(MAX(id), 0) + 1 FROM player;"
+        ).fetchone()[0]
+        con.execute(
+            f"""
+            CREATE OR REPLACE TEMP TABLE new_players_with_id AS
+            SELECT
+                ROW_NUMBER() OVER () + {next_player_id} - 1 AS id,
+                name,
+                title
+            FROM new_players;
+        """
         )
         con.execute(
             """
-            INSERT INTO opening (eco, name)
-            SELECT eco, name FROM batch_openings
-            ON CONFLICT(eco, name) DO NOTHING;
+            INSERT INTO player (id, name, title)
+            SELECT id, name, title FROM new_players_with_id;
+        """
+        )
+
+        # Insert new openings with explicit id
+        con.execute(
             """
+            CREATE OR REPLACE TEMP TABLE new_openings AS
+            SELECT bo.eco, bo.name
+            FROM batch_openings bo
+            LEFT JOIN opening o ON bo.eco = o.eco AND bo.name = o.name
+            WHERE o.eco IS NULL;
+        """
+        )
+        next_opening_id = con.execute(
+            "SELECT COALESCE(MAX(id), 0) + 1 FROM opening;"
+        ).fetchone()[0]
+        con.execute(
+            f"""
+            CREATE OR REPLACE TEMP TABLE new_openings_with_id AS
+            SELECT
+                ROW_NUMBER() OVER () + {next_opening_id} - 1 AS id,
+                eco,
+                name
+            FROM new_openings;
+        """
+        )
+        con.execute(
+            """
+            INSERT INTO opening (id, eco, name)
+            SELECT id, eco, name FROM new_openings_with_id;
+        """
         )
     except Exception as e:
         print("[ERROR] Inserting players/openings failed:", e)
