@@ -50,6 +50,7 @@ def process_parquet_file(
     Returns:
         True if the file was processed successfully, False otherwise.
     """
+    print(f"START processing {config.parquet_path}")
     db_con = None
     timing_details = {}
     try:
@@ -153,3 +154,5 @@ def process_parquet_file(
         print("\n--- Detailed Timing Metrics ---")
         for step, duration in timing_details.items():
             print(f"{step}: {duration:.2f}s")
+
+    print(f"END processing {config.parquet_path}")
