@@ -44338,8 +44338,1255 @@
         "etag": "10abd9642c2ce629ed9ea8428cf478304b6aa96b652eda53fdb7807a0a4c77ba",
         "processed_date": "2025-10-08 19:03:13"
       }
+    },
+    "2024-11": {
+      "2024-11-train-00000-of-00385.parquet": {
+        "size_bytes": 169801024,
+        "etag": "a463ef8aeacfed23d160676fbbb5f02f00825bf61ead6c617671fd827a3c1038",
+        "processed_date": "2025-10-08 19:50:33"
+      },
+      "2024-11-train-00001-of-00385.parquet": {
+        "size_bytes": 168732713,
+        "etag": "9d13af18f79c1aaf1684a072fdb4f949e209a9c293f43bd4d732dbbf0b8252cf",
+        "processed_date": "2025-10-08 19:50:52"
+      },
+      "2024-11-train-00002-of-00385.parquet": {
+        "size_bytes": 168964259,
+        "etag": "2c02cee9830d456bb2f43cd51d0927cead79900448531fceb5591f14dc4af9be",
+        "processed_date": "2025-10-08 19:51:12"
+      },
+      "2024-11-train-00003-of-00385.parquet": {
+        "size_bytes": 169914912,
+        "etag": "16edecac85c240682ec698fc14f5d73e03b7ac7bb682875a4a7fcf1d4c31ce6c",
+        "processed_date": "2025-10-08 19:51:32"
+      },
+      "2024-11-train-00004-of-00385.parquet": {
+        "size_bytes": 169943995,
+        "etag": "737cc787b186e022c48ed23a3bfead2b7905ee18e913869daa37a978d9871808",
+        "processed_date": "2025-10-08 19:51:51"
+      },
+      "2024-11-train-00005-of-00385.parquet": {
+        "size_bytes": 169536180,
+        "etag": "58a6a3ea417240be4efe5df37721507c6f8115e9f61b1e27e2e614fc63aae6fd",
+        "processed_date": "2025-10-08 19:52:11"
+      },
+      "2024-11-train-00006-of-00385.parquet": {
+        "size_bytes": 169974192,
+        "etag": "a217bf5a723627ac1dc017d891f5461d5a61988798bd3ea4b84325f1123ce947",
+        "processed_date": "2025-10-08 19:52:30"
+      },
+      "2024-11-train-00007-of-00385.parquet": {
+        "size_bytes": 170709421,
+        "etag": "c1be2c003d15cfb4b3dacea480685a1df1c2b3e49b85d6186979d1fe909c06e0",
+        "processed_date": "2025-10-08 19:52:51"
+      },
+      "2024-11-train-00008-of-00385.parquet": {
+        "size_bytes": 172454871,
+        "etag": "137f22e4eb27d345d5101a4708e48c8c6ebe97702debc1b9cc009f1abb1a25a7",
+        "processed_date": "2025-10-08 19:53:11"
+      },
+      "2024-11-train-00009-of-00385.parquet": {
+        "size_bytes": 173074347,
+        "etag": "6eb1ab060ebcc5edfd6637e155827c1880a69a7378cc56edf2f87b6cdb1f8af1",
+        "processed_date": "2025-10-08 19:53:32"
+      },
+      "2024-11-train-00010-of-00385.parquet": {
+        "size_bytes": 173120632,
+        "etag": "caf0048d979acae9fc6577e6c26b9a2d1ab73ac51e8d64c8bbdf903b50693c96",
+        "processed_date": "2025-10-08 19:53:52"
+      },
+      "2024-11-train-00011-of-00385.parquet": {
+        "size_bytes": 172364271,
+        "etag": "5b9fee018b2b6e3d42050a2a0beb9609c2068ea3a0b399a1045b341b1d39df4e",
+        "processed_date": "2025-10-08 19:54:11"
+      },
+      "2024-11-train-00012-of-00385.parquet": {
+        "size_bytes": 171292865,
+        "etag": "2874f9bb856b7a8fefeca25586c01051d06aa8370f8b53083d2fa30fe9bcadef",
+        "processed_date": "2025-10-08 19:54:30"
+      },
+      "2024-11-train-00013-of-00385.parquet": {
+        "size_bytes": 170215136,
+        "etag": "adfe33353ab074f816ae2d72034fd79e6574969be5ba9a460cec3cfa418cdcca",
+        "processed_date": "2025-10-08 19:54:50"
+      },
+      "2024-11-train-00014-of-00385.parquet": {
+        "size_bytes": 169092992,
+        "etag": "742c4bbf275a7521dd5ed02daf2e255556fca5fb8fca2f46f3d6bf51ea5e9a53",
+        "processed_date": "2025-10-08 19:55:09"
+      },
+      "2024-11-train-00015-of-00385.parquet": {
+        "size_bytes": 169381438,
+        "etag": "65e686614367342e520c48949b66b66dba37d763808bb66483c642c1025e87c8",
+        "processed_date": "2025-10-08 19:55:28"
+      },
+      "2024-11-train-00016-of-00385.parquet": {
+        "size_bytes": 170478686,
+        "etag": "82474129d1eb38e49406ad975884fe5147456f43cc1f42574032e632c3511f17",
+        "processed_date": "2025-10-08 19:55:47"
+      },
+      "2024-11-train-00017-of-00385.parquet": {
+        "size_bytes": 170660421,
+        "etag": "93f6772834e94925832e45ec06a54e188e74bf315d91eb1c4dbb847f89b98ee0",
+        "processed_date": "2025-10-08 19:56:06"
+      },
+      "2024-11-train-00018-of-00385.parquet": {
+        "size_bytes": 170579929,
+        "etag": "de8f014d7f098d1c15ff1b7f855a12b56f22d81a4b727f8f4c1f78551df10710",
+        "processed_date": "2025-10-08 19:56:24"
+      },
+      "2024-11-train-00019-of-00385.parquet": {
+        "size_bytes": 170496721,
+        "etag": "3cc93f8e202a96e6c461e87840bb3d54cbdde0e1096db3533d456c596be2b605",
+        "processed_date": "2025-10-08 19:56:42"
+      },
+      "2024-11-train-00020-of-00385.parquet": {
+        "size_bytes": 170988140,
+        "etag": "324bc5e315ffaabb11603002f04e8ee005e2fed818e8c9163e190437ad2c2a42",
+        "processed_date": "2025-10-08 19:57:00"
+      },
+      "2024-11-train-00021-of-00385.parquet": {
+        "size_bytes": 171079807,
+        "etag": "c3395b67ecc2ccd0fd5a053ae86eada1f62dc5efd9908bd074ba7c50201ccbc1",
+        "processed_date": "2025-10-08 19:57:19"
+      },
+      "2024-11-train-00022-of-00385.parquet": {
+        "size_bytes": 171228714,
+        "etag": "12d7fe1955cd864d66f6c16a29b628d05e490919b2b9af60f1e7b6d82eba6551",
+        "processed_date": "2025-10-08 19:57:38"
+      },
+      "2024-11-train-00023-of-00385.parquet": {
+        "size_bytes": 172269346,
+        "etag": "68b9a1eea0eb1c17c5ad440430ac41ec6230463326b0a36c6faeb3d507f3d2de",
+        "processed_date": "2025-10-08 19:57:56"
+      },
+      "2024-11-train-00024-of-00385.parquet": {
+        "size_bytes": 173334661,
+        "etag": "8dfa25da25b5dfa63fd42361bca45e86d80570afcb4b67cf67c00ed1b3096e81",
+        "processed_date": "2025-10-08 19:58:16"
+      },
+      "2024-11-train-00025-of-00385.parquet": {
+        "size_bytes": 172497316,
+        "etag": "e6f2b336d6da642407520f1f3a9bf0238310e7328512d503f972fd71e56da214",
+        "processed_date": "2025-10-08 19:58:35"
+      },
+      "2024-11-train-00026-of-00385.parquet": {
+        "size_bytes": 171066603,
+        "etag": "baa73ac58387aefc2fd01a8b4d9cdc370f40cac999b062aa874b77f5d28ca70a",
+        "processed_date": "2025-10-08 19:58:53"
+      },
+      "2024-11-train-00027-of-00385.parquet": {
+        "size_bytes": 170432182,
+        "etag": "dddc2fda65fa4f0c6095af3f253b1213db349957aedf2c573c17a6f4f489c428",
+        "processed_date": "2025-10-08 19:59:12"
+      },
+      "2024-11-train-00028-of-00385.parquet": {
+        "size_bytes": 171387788,
+        "etag": "0db45981a7881ca41458c651526d6672c8bfbff82c112895ad23d5ee298a0587",
+        "processed_date": "2025-10-08 19:59:31"
+      },
+      "2024-11-train-00029-of-00385.parquet": {
+        "size_bytes": 172255640,
+        "etag": "d7575f87d8cae0f0ce23f059886aeb3822194b124ce51d217f7d465202b5e4c4",
+        "processed_date": "2025-10-08 19:59:50"
+      },
+      "2024-11-train-00030-of-00385.parquet": {
+        "size_bytes": 171353173,
+        "etag": "be845d7b9aca566c79750bf1cb5f14d99c5f30304412afdabafd13297b44f569",
+        "processed_date": "2025-10-08 20:00:08"
+      },
+      "2024-11-train-00031-of-00385.parquet": {
+        "size_bytes": 171586633,
+        "etag": "aad1428282a86ee57b014c916f6c3e184e0c1c67e7467960388dcc9932384bc0",
+        "processed_date": "2025-10-08 20:00:26"
+      },
+      "2024-11-train-00032-of-00385.parquet": {
+        "size_bytes": 171169431,
+        "etag": "bf14bb19cb8670edd05213579229fc60a77d54593704be85dc95e533d1dcd393",
+        "processed_date": "2025-10-08 20:00:44"
+      },
+      "2024-11-train-00033-of-00385.parquet": {
+        "size_bytes": 171940785,
+        "etag": "b48d05bf9cbbb2faf589ea6b33f898806eccddb99c6a8c7e1cf1676c9b1b3a15",
+        "processed_date": "2025-10-08 20:01:02"
+      },
+      "2024-11-train-00034-of-00385.parquet": {
+        "size_bytes": 170644895,
+        "etag": "6b831a89dddc1f207441f16bb1ff7f23a9dfebfd37c1d44542fe67ffcb16d4ba",
+        "processed_date": "2025-10-08 20:01:20"
+      },
+      "2024-11-train-00035-of-00385.parquet": {
+        "size_bytes": 171745522,
+        "etag": "f5122c39adec4de30c0d78ca2b91b566400242f64533fcc558ebe2e24c09d557",
+        "processed_date": "2025-10-08 20:01:37"
+      },
+      "2024-11-train-00036-of-00385.parquet": {
+        "size_bytes": 175625454,
+        "etag": "a2e1a07c826ef9c314dc765dc9e3132bc5fda04309fd385ecfcb14b67056ebac",
+        "processed_date": "2025-10-08 20:01:54"
+      },
+      "2024-11-train-00037-of-00385.parquet": {
+        "size_bytes": 172913343,
+        "etag": "91fc9da6b4de0d638d9db70cb5b665de31eaf022449b117e12b547628fbff692",
+        "processed_date": "2025-10-08 20:02:12"
+      },
+      "2024-11-train-00038-of-00385.parquet": {
+        "size_bytes": 171751827,
+        "etag": "c5deecb479179e0ae019e27eda5f2e3e1fba08b24dd82bf60e115a56dc55a65e",
+        "processed_date": "2025-10-08 20:02:30"
+      },
+      "2024-11-train-00039-of-00385.parquet": {
+        "size_bytes": 170549563,
+        "etag": "68a0b059fd904e537072b14bf23258ab783dde9053470043adbb24f6099e4970",
+        "processed_date": "2025-10-08 20:02:47"
+      },
+      "2024-11-train-00040-of-00385.parquet": {
+        "size_bytes": 168595789,
+        "etag": "5c17a5dbae76ce9a66356bf35ca1c782ade9e80336d76962453266f597d0690f",
+        "processed_date": "2025-10-08 20:03:05"
+      },
+      "2024-11-train-00041-of-00385.parquet": {
+        "size_bytes": 169118048,
+        "etag": "519c32a45f5cb70422e85acc62c9b589aa50818f51a4f7056df001a3e7e8ab02",
+        "processed_date": "2025-10-08 20:03:23"
+      },
+      "2024-11-train-00042-of-00385.parquet": {
+        "size_bytes": 170232298,
+        "etag": "6e9d8f7c359b4878ec554b8c21b2a58f3fe9cd14653c052f13e80941d7c85981",
+        "processed_date": "2025-10-08 20:03:41"
+      },
+      "2024-11-train-00043-of-00385.parquet": {
+        "size_bytes": 170373240,
+        "etag": "e7b69b2532fe65f1d3177b1abbd04cb4e789da272a21a2b40bb7504acaf2d29e",
+        "processed_date": "2025-10-08 20:03:59"
+      },
+      "2024-11-train-00044-of-00385.parquet": {
+        "size_bytes": 170773761,
+        "etag": "b98213516af1f3891f032d6c6a8d13d985da3dc48e28f992b20c3b8edc816bd1",
+        "processed_date": "2025-10-08 20:04:17"
+      },
+      "2024-11-train-00045-of-00385.parquet": {
+        "size_bytes": 171275963,
+        "etag": "0dac0d5f8593c1a480dc3e193b3eb108de690432aa72e40259ce47d3d54f3229",
+        "processed_date": "2025-10-08 20:04:34"
+      },
+      "2024-11-train-00046-of-00385.parquet": {
+        "size_bytes": 171358768,
+        "etag": "8654dad9365293a36ba46d8fa96027dca7d2300624d57d3e06845f889802e357",
+        "processed_date": "2025-10-08 20:04:52"
+      },
+      "2024-11-train-00047-of-00385.parquet": {
+        "size_bytes": 172148469,
+        "etag": "aea2cb235780983f0042d1c85ce2d30bd3fb8bac9d13ccd70ca851d152dcac4d",
+        "processed_date": "2025-10-08 20:05:09"
+      },
+      "2024-11-train-00048-of-00385.parquet": {
+        "size_bytes": 171813425,
+        "etag": "08ac13647fda1e1bd7b9e33da3d0bab94f0df259a13be1279178916c16a22c52",
+        "processed_date": "2025-10-08 20:05:28"
+      },
+      "2024-11-train-00049-of-00385.parquet": {
+        "size_bytes": 172394823,
+        "etag": "e56dfc0b219bc96a00dadb5c0ae6ac9210158426fd0f4e40f1f922174d55b0f8",
+        "processed_date": "2025-10-08 20:05:46"
+      },
+      "2024-11-train-00050-of-00385.parquet": {
+        "size_bytes": 172376901,
+        "etag": "e1c167f4c1230883706cf4a990bd0094f181ef49dfb4377c600a5b70cfeadcb5",
+        "processed_date": "2025-10-08 20:06:03"
+      },
+      "2024-11-train-00051-of-00385.parquet": {
+        "size_bytes": 172288556,
+        "etag": "8e2912bbf69276eeabcecb6879a0edf4787866d60b1af904c3f83cab20a6ebf1",
+        "processed_date": "2025-10-08 20:06:21"
+      },
+      "2024-11-train-00052-of-00385.parquet": {
+        "size_bytes": 170621608,
+        "etag": "f89805beb95f2a93f7b5e1b6ab8f922dc59cbd43fc23acdfdf63b290e606f131",
+        "processed_date": "2025-10-08 20:06:39"
+      },
+      "2024-11-train-00053-of-00385.parquet": {
+        "size_bytes": 169482683,
+        "etag": "bd5119a3c31d3d03e06c20869761113e97e85d0b92c2688a51b7cba92cef2a1a",
+        "processed_date": "2025-10-08 20:06:58"
+      },
+      "2024-11-train-00054-of-00385.parquet": {
+        "size_bytes": 167292163,
+        "etag": "691ea0fb2269c6d6000f6e3a8665b07d286c7f2278785043b82d4c47de904ea9",
+        "processed_date": "2025-10-08 20:07:17"
+      },
+      "2024-11-train-00055-of-00385.parquet": {
+        "size_bytes": 168817710,
+        "etag": "475d891fba985edfc84e02a34077682760807e6e5718a0840487e17e346c5249",
+        "processed_date": "2025-10-08 20:07:35"
+      },
+      "2024-11-train-00056-of-00385.parquet": {
+        "size_bytes": 168887564,
+        "etag": "26fffc284cc46d826e9b9ff19f2fa7c197f74cdc5b9a93cbd48ba828f30959fe",
+        "processed_date": "2025-10-08 20:07:54"
+      },
+      "2024-11-train-00057-of-00385.parquet": {
+        "size_bytes": 169308873,
+        "etag": "8e1853d615664df71bc8132e7a571501d912fa2a3d69451a608ca2468fb53c9d",
+        "processed_date": "2025-10-08 20:08:12"
+      },
+      "2024-11-train-00058-of-00385.parquet": {
+        "size_bytes": 169414735,
+        "etag": "02a95e57fe41f18cac53a7942ea8155be3e167756b692515702f16b209ab50e4",
+        "processed_date": "2025-10-08 20:08:30"
+      },
+      "2024-11-train-00059-of-00385.parquet": {
+        "size_bytes": 170023643,
+        "etag": "518c6f0a2817c83312d904a8676d90ed58f92f60dce4b088c7e2eec79c172a76",
+        "processed_date": "2025-10-08 20:08:47"
+      },
+      "2024-11-train-00060-of-00385.parquet": {
+        "size_bytes": 171699813,
+        "etag": "c1722bb6f78fd04c3798b5eeaec6d822210e0235c5fd921abac9c197f31f0ef9",
+        "processed_date": "2025-10-08 20:09:05"
+      },
+      "2024-11-train-00061-of-00385.parquet": {
+        "size_bytes": 172251530,
+        "etag": "a287fd04575f36e312892fdf39003a6bab824141b7d4e2bc7eee12deb2f67b71",
+        "processed_date": "2025-10-08 20:09:25"
+      },
+      "2024-11-train-00062-of-00385.parquet": {
+        "size_bytes": 172405641,
+        "etag": "46e95d1145dce7bab24355df83fc4388246fb6b9e70c18059afc30760e8373a3",
+        "processed_date": "2025-10-08 20:09:45"
+      },
+      "2024-11-train-00063-of-00385.parquet": {
+        "size_bytes": 171608982,
+        "etag": "acf710af3e44b79f227c0346fa8f39ef8c66de90ef2790c87178fff92b4d88e5",
+        "processed_date": "2025-10-08 20:10:05"
+      },
+      "2024-11-train-00064-of-00385.parquet": {
+        "size_bytes": 170488618,
+        "etag": "ddba102eeade9b488d277a5388b18910aca49e2d92cdb90e361d42fafdded133",
+        "processed_date": "2025-10-08 20:10:24"
+      },
+      "2024-11-train-00065-of-00385.parquet": {
+        "size_bytes": 168189175,
+        "etag": "ddcaea332ec697fe39b0283e1a514670edf4a8a9b1e565afd485cab669046541",
+        "processed_date": "2025-10-08 20:10:44"
+      },
+      "2024-11-train-00066-of-00385.parquet": {
+        "size_bytes": 167492212,
+        "etag": "b8e98b2a1078a28e8d24ade97b11a4e0301a97b7ee1d138d4ad71c4899039809",
+        "processed_date": "2025-10-08 20:11:03"
+      },
+      "2024-11-train-00068-of-00385.parquet": {
+        "size_bytes": 169566865,
+        "etag": "4312e99b9736941fbd40b25c92352216dc32c690154288a3f7a71d037f00af32",
+        "processed_date": "2025-10-08 20:11:29"
+      },
+      "2024-11-train-00069-of-00385.parquet": {
+        "size_bytes": 169501495,
+        "etag": "ec803e36b18259a5c2224b49c8e417805bad2e864812a44fc0ec5fca04e6b160",
+        "processed_date": "2025-10-08 20:11:49"
+      },
+      "2024-11-train-00070-of-00385.parquet": {
+        "size_bytes": 169341271,
+        "etag": "3a0be95f37d14fe8b57275f8e01d997f5f0b7355eb7f4e35ee31072c5547e430",
+        "processed_date": "2025-10-08 20:12:08"
+      },
+      "2024-11-train-00071-of-00385.parquet": {
+        "size_bytes": 169950557,
+        "etag": "9a8112276090e8d58b89e3e33c65f8ed8cabccea97b37fe0c0eda2d26c77e1ff",
+        "processed_date": "2025-10-08 20:12:27"
+      },
+      "2024-11-train-00072-of-00385.parquet": {
+        "size_bytes": 170433509,
+        "etag": "d9b4bb56c25906da297625e262d9d76236e150112bc6ea6f45e0793f74aaca40",
+        "processed_date": "2025-10-08 20:12:46"
+      },
+      "2024-11-train-00073-of-00385.parquet": {
+        "size_bytes": 170876513,
+        "etag": "0a1d3406798f098324f221f5492a5bb337f304cec5860576f9239545d9a3e5d3",
+        "processed_date": "2025-10-08 20:13:05"
+      },
+      "2024-11-train-00074-of-00385.parquet": {
+        "size_bytes": 171507159,
+        "etag": "8a4d14b4d28d9189cb19ff7525a5c74c14e765214b08cd48f9e33db057991b2e",
+        "processed_date": "2025-10-08 20:13:25"
+      },
+      "2024-11-train-00075-of-00385.parquet": {
+        "size_bytes": 171054955,
+        "etag": "c682962e7b6a35397e360e08d726151b586843a3c4a7f4f48ecfc77bdfa9125c",
+        "processed_date": "2025-10-08 20:13:43"
+      },
+      "2024-11-train-00076-of-00385.parquet": {
+        "size_bytes": 170477276,
+        "etag": "69d01866d69a703c31e3b8072d6ebef002a3d68f63e240ca310ce0097910a6b8",
+        "processed_date": "2025-10-08 20:14:06"
+      },
+      "2024-11-train-00077-of-00385.parquet": {
+        "size_bytes": 170063974,
+        "etag": "2ff7ff6497f6bf0066247eb1a605a38020e22cad65cb15478019faafe3e7e6ee",
+        "processed_date": "2025-10-08 20:14:27"
+      },
+      "2024-11-train-00078-of-00385.parquet": {
+        "size_bytes": 169317340,
+        "etag": "70d6cbd46a6c548f797869f078114c0e52b0bf8d0fd292831b10aab8d91c759c",
+        "processed_date": "2025-10-08 20:14:48"
+      },
+      "2024-11-train-00079-of-00385.parquet": {
+        "size_bytes": 168952119,
+        "etag": "8a0ccfa9645c3cf7362b357f1720ee29cc46fbe77cf4c5f16467e705e9571e82",
+        "processed_date": "2025-10-08 20:15:09"
+      },
+      "2024-11-train-00080-of-00385.parquet": {
+        "size_bytes": 169313024,
+        "etag": "4f574b01683bbd328614706264ca3b8d916c777c785540e044eb9c5b0502981c",
+        "processed_date": "2025-10-08 20:15:29"
+      },
+      "2024-11-train-00081-of-00385.parquet": {
+        "size_bytes": 169194065,
+        "etag": "19727e3ec3633cad8926498d8cda3ff3c65f497d7389af41a85b12d437c99e5f",
+        "processed_date": "2025-10-08 20:15:48"
+      },
+      "2024-11-train-00082-of-00385.parquet": {
+        "size_bytes": 168887484,
+        "etag": "cc59a30dc5c5f55873a78decadc288e8c907aa2eef5b4702801657a7ecc6bf46",
+        "processed_date": "2025-10-08 20:16:07"
+      },
+      "2024-11-train-00083-of-00385.parquet": {
+        "size_bytes": 169249571,
+        "etag": "2778912241162736ea7ec666b2608d207694278bf25b42da1331b85d4b586bf7",
+        "processed_date": "2025-10-08 20:16:28"
+      },
+      "2024-11-train-00084-of-00385.parquet": {
+        "size_bytes": 170400292,
+        "etag": "dd61e66668e86aaf335a40afbb06f7a10785709be453f6f2528af65739d8b1a4",
+        "processed_date": "2025-10-08 20:16:48"
+      },
+      "2024-11-train-00085-of-00385.parquet": {
+        "size_bytes": 170786406,
+        "etag": "536df9deb29d8d0d1ab602482d24584d87a9aaaa299410640b52d67fc5841241",
+        "processed_date": "2025-10-08 20:17:08"
+      },
+      "2024-11-train-00086-of-00385.parquet": {
+        "size_bytes": 171948590,
+        "etag": "c94034334f208b38cb388e129b5d9196ece7ba84eeb6c4b4b547d842f405446b",
+        "processed_date": "2025-10-08 20:17:27"
+      },
+      "2024-11-train-00087-of-00385.parquet": {
+        "size_bytes": 174685124,
+        "etag": "e2dff80be7dd8e703fdfb7a23904b30f728790b6556e3a938c2db705cef9e577",
+        "processed_date": "2025-10-08 20:17:47"
+      },
+      "2024-11-train-00088-of-00385.parquet": {
+        "size_bytes": 171957851,
+        "etag": "dd27d11c3f775e18948c4d82fe64108509d7b882628728f324b5296f95dc2939",
+        "processed_date": "2025-10-08 20:18:06"
+      },
+      "2024-11-train-00089-of-00385.parquet": {
+        "size_bytes": 171089631,
+        "etag": "33eff5261012a6bb952dc17c2c7ad44b37d29401a1f682ac8c91e2020b187da2",
+        "processed_date": "2025-10-08 20:18:24"
+      },
+      "2024-11-train-00090-of-00385.parquet": {
+        "size_bytes": 169727333,
+        "etag": "0b3b84085f9a56dba3b00a4fa647e1cf07c2a4566aa275d51539d3216b7a6da9",
+        "processed_date": "2025-10-08 20:18:42"
+      },
+      "2024-11-train-00091-of-00385.parquet": {
+        "size_bytes": 168036459,
+        "etag": "45c9254be5104ed37d81fbbf8ba5fa19c5eaf68744887291c5d483b937d65159",
+        "processed_date": "2025-10-08 20:19:03"
+      },
+      "2024-11-train-00092-of-00385.parquet": {
+        "size_bytes": 167642859,
+        "etag": "d4c99ea0835509491c25d55805769e218a99c6931a9e7e43549bfd5600590c78",
+        "processed_date": "2025-10-08 20:19:22"
+      },
+      "2024-11-train-00093-of-00385.parquet": {
+        "size_bytes": 168474018,
+        "etag": "ec41a54f18f6a548fbf2fbb38d75d85a0d99ceb643c591fd56be1fc17e3847bf",
+        "processed_date": "2025-10-08 20:19:41"
+      },
+      "2024-11-train-00094-of-00385.parquet": {
+        "size_bytes": 168594524,
+        "etag": "64c094b9d71a396bf5678d176cc18baf2f469f404423ae6ca9a52491f6a282de",
+        "processed_date": "2025-10-08 20:19:59"
+      },
+      "2024-11-train-00095-of-00385.parquet": {
+        "size_bytes": 168832693,
+        "etag": "c2bd22d9bebceee810556098fae4bc58a767d1bbd4d8c1e12af0fb42e9e49886",
+        "processed_date": "2025-10-08 20:20:18"
+      },
+      "2024-11-train-00096-of-00385.parquet": {
+        "size_bytes": 169746093,
+        "etag": "0ff0dd22025169578bc0f2f8b891a9b39ff9f2be8a86b0fdf7c78904a2e4927b",
+        "processed_date": "2025-10-08 20:20:36"
+      },
+      "2024-11-train-00097-of-00385.parquet": {
+        "size_bytes": 170175971,
+        "etag": "88d280d316319c36c200670398a1312919affe41d1c62052575bd497b016baf7",
+        "processed_date": "2025-10-08 20:20:55"
+      },
+      "2024-11-train-00098-of-00385.parquet": {
+        "size_bytes": 170918447,
+        "etag": "9ce11f96265caa7d5a127a9f8eaf496d8f6d8ca542ecdf2407f20222aca7a0c8",
+        "processed_date": "2025-10-08 20:21:14"
+      },
+      "2024-11-train-00099-of-00385.parquet": {
+        "size_bytes": 171306457,
+        "etag": "0aeba53e883e2a1f70ee3fb8b61a0826ba1f085aaf48ee7722c12516e183e94b",
+        "processed_date": "2025-10-08 20:21:33"
+      },
+      "2024-11-train-00100-of-00385.parquet": {
+        "size_bytes": 171356366,
+        "etag": "1798ec03214ca81fa30a5d39c55dd2490e7f5774516a0e2f4fb7e2efb8059305",
+        "processed_date": "2025-10-08 20:21:51"
+      },
+      "2024-11-train-00101-of-00385.parquet": {
+        "size_bytes": 171356873,
+        "etag": "f52cfdbe15cffbe1362876b225e762aff716e0e53713e709e0a45a58ad745366",
+        "processed_date": "2025-10-08 20:22:09"
+      },
+      "2024-11-train-00102-of-00385.parquet": {
+        "size_bytes": 170566122,
+        "etag": "21d4500f41a4e597f9784a360efdb4c66c15d51ec57ad832c6902d9183e0a0b6",
+        "processed_date": "2025-10-08 20:22:29"
+      },
+      "2024-11-train-00103-of-00385.parquet": {
+        "size_bytes": 169814348,
+        "etag": "3c3ba70829173af9d4028c0f86081bd439c4c66f8893721677e32daed1bc5f69",
+        "processed_date": "2025-10-08 20:22:48"
+      },
+      "2024-11-train-00104-of-00385.parquet": {
+        "size_bytes": 170344065,
+        "etag": "e245b680cd1e0a41642a22d38947ed2af283dde27d2ec41372a21c77653da638",
+        "processed_date": "2025-10-08 20:23:09"
+      },
+      "2024-11-train-00105-of-00385.parquet": {
+        "size_bytes": 170757265,
+        "etag": "06149f7a0fd36896930596d91e930c4f31930ff1d29803e63f7c7f28fae16b3a",
+        "processed_date": "2025-10-08 20:23:30"
+      },
+      "2024-11-train-00106-of-00385.parquet": {
+        "size_bytes": 171545212,
+        "etag": "c4c37a70c156740926aa5eea68853b8fd02e190e74cf8d9292e0bd4f42eab20c",
+        "processed_date": "2025-10-08 20:23:49"
+      },
+      "2024-11-train-00107-of-00385.parquet": {
+        "size_bytes": 171294611,
+        "etag": "df8b03a0d33d7aeba23337f586c7c91fbc49621c38cf3af22f395a89afa8bb3c",
+        "processed_date": "2025-10-08 20:24:08"
+      },
+      "2024-11-train-00108-of-00385.parquet": {
+        "size_bytes": 170782600,
+        "etag": "907120059af138cb557ba47b92eeb9854c3031ba6cbe5ec1104f581c1619ad84",
+        "processed_date": "2025-10-08 20:24:28"
+      },
+      "2024-11-train-00109-of-00385.parquet": {
+        "size_bytes": 170828602,
+        "etag": "31f254dd84b3f1a26bd58ed6cbc1f86ddf5fa00254948131eb631db98ea9e409",
+        "processed_date": "2025-10-08 20:24:47"
+      },
+      "2024-11-train-00110-of-00385.parquet": {
+        "size_bytes": 171277778,
+        "etag": "cded6d67753b934db3122f8ae76680ef8f8a24c9982477fa2dfe74a8af86e77c",
+        "processed_date": "2025-10-08 20:25:07"
+      },
+      "2024-11-train-00111-of-00385.parquet": {
+        "size_bytes": 172298697,
+        "etag": "aa3e93b222b77a2a4922d5759abf5dc85c1f95f75401d0ed1af8d7d300c84de5",
+        "processed_date": "2025-10-08 20:25:29"
+      },
+      "2024-11-train-00112-of-00385.parquet": {
+        "size_bytes": 173055999,
+        "etag": "030200134b318f37013434c36a1835ec975cb2d39cda63643ba5927ba1aa9a57",
+        "processed_date": "2025-10-08 20:25:50"
+      },
+      "2024-11-train-00113-of-00385.parquet": {
+        "size_bytes": 172533543,
+        "etag": "ce87b663142aeffd5bd087c8747bbd70495729495c78d7f79b5aea01deb7c6ce",
+        "processed_date": "2025-10-08 20:26:10"
+      },
+      "2024-11-train-00114-of-00385.parquet": {
+        "size_bytes": 172486839,
+        "etag": "4dbb834f96060e84e7c0707ecfd55839956b62ef2d4a51eb2770dfed049cf0cb",
+        "processed_date": "2025-10-08 20:26:31"
+      },
+      "2024-11-train-00115-of-00385.parquet": {
+        "size_bytes": 170481730,
+        "etag": "a8a7ddb38a2d89f6325b9800f20ed6db9a9a7130e9e25ed9c92096c29cd3918b",
+        "processed_date": "2025-10-08 20:26:53"
+      },
+      "2024-11-train-00116-of-00385.parquet": {
+        "size_bytes": 169194578,
+        "etag": "8173e8d6e9d9099947d442e468136b44453b70342483ab48f4e9e39b0d73a5ed",
+        "processed_date": "2025-10-08 20:27:13"
+      },
+      "2024-11-train-00117-of-00385.parquet": {
+        "size_bytes": 170075299,
+        "etag": "a122ab2a4e78867efce90dc6293721f53fad8051fa6c8569d2e24d674cecafc5",
+        "processed_date": "2025-10-08 20:27:34"
+      },
+      "2024-11-train-00118-of-00385.parquet": {
+        "size_bytes": 170546820,
+        "etag": "498bc992ae4d672fbf7cedddb4742774da8373f3dd033c4321b19f60be34b3c0",
+        "processed_date": "2025-10-08 20:27:54"
+      },
+      "2024-11-train-00119-of-00385.parquet": {
+        "size_bytes": 170858329,
+        "etag": "626a62241bd7a45149fdfb3d4a23f63d542ad5724d0093db1a0d95ea3b131c1a",
+        "processed_date": "2025-10-08 20:28:13"
+      },
+      "2024-11-train-00120-of-00385.parquet": {
+        "size_bytes": 171336367,
+        "etag": "a9d754dc97a1834d5702f354f53994cddc93534639250fffb133b6ddf79f518a",
+        "processed_date": "2025-10-08 20:28:35"
+      },
+      "2024-11-train-00121-of-00385.parquet": {
+        "size_bytes": 171961907,
+        "etag": "aac6d575202005e2c70e2f6ff41c49480e27053b9866d208f2a48142f69a8242",
+        "processed_date": "2025-10-08 20:28:55"
+      },
+      "2024-11-train-00122-of-00385.parquet": {
+        "size_bytes": 171802333,
+        "etag": "5d1e1d7a96633a300914be073609f46f3018717a8c2dc0fcf69f2ba7361ac36c",
+        "processed_date": "2025-10-08 20:29:15"
+      },
+      "2024-11-train-00123-of-00385.parquet": {
+        "size_bytes": 171107172,
+        "etag": "f35e1862f231fea83b31ab69d334271762530a1be2a54eaec23ba1a36b9a9e6d",
+        "processed_date": "2025-10-08 20:29:35"
+      },
+      "2024-11-train-00124-of-00385.parquet": {
+        "size_bytes": 172890034,
+        "etag": "9fbd9407c94b7434a10e091f4d994fa2a2715da0a197d5a3c87ebcf35d978848",
+        "processed_date": "2025-10-08 20:29:54"
+      },
+      "2024-11-train-00125-of-00385.parquet": {
+        "size_bytes": 176679340,
+        "etag": "10dd540d294067564f5abc4cb99ceeaf54bf75922c425b59fc4cf4916807eefe",
+        "processed_date": "2025-10-08 20:30:13"
+      },
+      "2024-11-train-00126-of-00385.parquet": {
+        "size_bytes": 173555591,
+        "etag": "1a4c1bfc503f9051fd632cb44105b946c149fa2e3fc2a5fc1c218516348d6e63",
+        "processed_date": "2025-10-08 20:30:32"
+      },
+      "2024-11-train-00127-of-00385.parquet": {
+        "size_bytes": 172307169,
+        "etag": "020c23c1ea43355008bc305dceef72f5e81e0d536dc8f19c73f0030f045aecb1",
+        "processed_date": "2025-10-08 20:30:51"
+      },
+      "2024-11-train-00128-of-00385.parquet": {
+        "size_bytes": 170400185,
+        "etag": "f5c107c6555a0389d1324030c5720de5e6d427e7847877ba83f505eccd6fb43b",
+        "processed_date": "2025-10-08 20:31:11"
+      },
+      "2024-11-train-00129-of-00385.parquet": {
+        "size_bytes": 168234065,
+        "etag": "4b92373c4b0664ef316b11d8403bbd5e3ada3b00cad8edc405e868a5a947a893",
+        "processed_date": "2025-10-08 20:31:33"
+      },
+      "2024-11-train-00130-of-00385.parquet": {
+        "size_bytes": 168310124,
+        "etag": "8a90eef9538c8a6dec6b3ac1aeddfc9ec112b1af870b0389d4f465ea5ee11f70",
+        "processed_date": "2025-10-08 20:31:57"
+      },
+      "2024-11-train-00131-of-00385.parquet": {
+        "size_bytes": 169986287,
+        "etag": "28f83f3d68c8f68adaf486999b84b6de5a0323adffaa4eb3f64295a7ecd4a7d9",
+        "processed_date": "2025-10-08 20:32:18"
+      },
+      "2024-11-train-00132-of-00385.parquet": {
+        "size_bytes": 169756652,
+        "etag": "72e6e2e955e661d48a95d9b307acbdbc9c81b807ee1ee1b4a44c0c7495f01273",
+        "processed_date": "2025-10-08 20:32:40"
+      },
+      "2024-11-train-00133-of-00385.parquet": {
+        "size_bytes": 169930535,
+        "etag": "cf0903e197258da3c053e2731a6744c25db55f66a2b6528734bf4b02dad381fb",
+        "processed_date": "2025-10-08 20:33:01"
+      },
+      "2024-11-train-00134-of-00385.parquet": {
+        "size_bytes": 169911566,
+        "etag": "d88e5c153a615f67c808b0fc038f6d598203ab196ad0d052a24a2440a82ba5f4",
+        "processed_date": "2025-10-08 20:33:21"
+      },
+      "2024-11-train-00135-of-00385.parquet": {
+        "size_bytes": 170499235,
+        "etag": "357a0bb6b6c1030f6e7311f1a651017ace2b828ad523ab444f1e44a4f5a0817c",
+        "processed_date": "2025-10-08 20:33:42"
+      },
+      "2024-11-train-00136-of-00385.parquet": {
+        "size_bytes": 171288125,
+        "etag": "2b1d7766c928139fa285e9d3b16c1cbfc0a3be9c6b4029f76f9ad15703ee71a3",
+        "processed_date": "2025-10-08 20:34:03"
+      },
+      "2024-11-train-00137-of-00385.parquet": {
+        "size_bytes": 172258825,
+        "etag": "71907a82e1f324287d7552d1d14378df767e77709354780f248d4729a5621765",
+        "processed_date": "2025-10-08 20:34:23"
+      },
+      "2024-11-train-00138-of-00385.parquet": {
+        "size_bytes": 172870250,
+        "etag": "8d97cb20e2be12eefbc9b84107ec09ca0559e1a1c8506e6a041cc51c6485f7ca",
+        "processed_date": "2025-10-08 20:34:43"
+      },
+      "2024-11-train-00139-of-00385.parquet": {
+        "size_bytes": 172846852,
+        "etag": "a7eff30dfe44558b33a2d8f259e2ae612bd643eb9d8505799b5af3f5bd31debe",
+        "processed_date": "2025-10-08 20:35:02"
+      },
+      "2024-11-train-00140-of-00385.parquet": {
+        "size_bytes": 171617497,
+        "etag": "4ea032874ee1effebe4242d5ec519c199cef1e2fcd6e96acd422aa14687d81a5",
+        "processed_date": "2025-10-08 20:35:21"
+      },
+      "2024-11-train-00141-of-00385.parquet": {
+        "size_bytes": 170912376,
+        "etag": "f68c7f3e58bcdf7362d569fa9956418b06b31a1f64d89c7b0a73791e19452c05",
+        "processed_date": "2025-10-08 20:35:47"
+      },
+      "2024-11-train-00142-of-00385.parquet": {
+        "size_bytes": 169207793,
+        "etag": "636be87bcf04cdacbb42090788f8eb67132d5f59fb9dc304a6399b7c16a06473",
+        "processed_date": "2025-10-08 20:36:09"
+      },
+      "2024-11-train-00143-of-00385.parquet": {
+        "size_bytes": 168957848,
+        "etag": "5130c5cba321c70e4cf5cf16fd80e4adc56573be19f5e8e3d284a34ed93988ec",
+        "processed_date": "2025-10-08 20:36:30"
+      },
+      "2024-11-train-00144-of-00385.parquet": {
+        "size_bytes": 169342928,
+        "etag": "697746026f17283c32bfa137c5848118faac8f4da130f37f6c46e252caf86a8f",
+        "processed_date": "2025-10-08 20:36:53"
+      },
+      "2024-11-train-00145-of-00385.parquet": {
+        "size_bytes": 169115209,
+        "etag": "4f821c3164b0e7a2c08dec08657f08408585be0a8b9fa89906ea530e143a3565",
+        "processed_date": "2025-10-08 20:37:14"
+      },
+      "2024-11-train-00146-of-00385.parquet": {
+        "size_bytes": 169051473,
+        "etag": "e94117d977a388d4e7c7bafddf0eec0e32ff5e509497eac6e2b357a1e74230bd",
+        "processed_date": "2025-10-08 20:37:34"
+      },
+      "2024-11-train-00147-of-00385.parquet": {
+        "size_bytes": 169828348,
+        "etag": "d9c6c5227831432c1cd9079862083b1b25e604da3e449d37797abe31ffef5306",
+        "processed_date": "2025-10-08 20:37:53"
+      },
+      "2024-11-train-00148-of-00385.parquet": {
+        "size_bytes": 170993217,
+        "etag": "f976a6ff04202c6b0bc6911cd0cda8299e6a572dfed91b5636cf77bc57fa5e65",
+        "processed_date": "2025-10-08 20:38:14"
+      },
+      "2024-11-train-00149-of-00385.parquet": {
+        "size_bytes": 171199902,
+        "etag": "58736b6d477cdaa3ce4be3ff653e25ec8da6ed7f53142c661459ba5c773392cf",
+        "processed_date": "2025-10-08 20:38:34"
+      },
+      "2024-11-train-00150-of-00385.parquet": {
+        "size_bytes": 172527917,
+        "etag": "b616a1dd7ccdaf3969db280f1cf710dbe029740fbab615f6c116ff7a23bbd80c",
+        "processed_date": "2025-10-08 20:38:54"
+      },
+      "2024-11-train-00151-of-00385.parquet": {
+        "size_bytes": 172406614,
+        "etag": "e047e98a950d748e239517ccaf89970ea8ee15c645ef78b2ef500dc93e9bf320",
+        "processed_date": "2025-10-08 20:39:15"
+      },
+      "2024-11-train-00152-of-00385.parquet": {
+        "size_bytes": 171422335,
+        "etag": "b7e233a727b41dd83cc0496d612968ea738254756e4938fc703c9731d2a48d07",
+        "processed_date": "2025-10-08 20:39:39"
+      },
+      "2024-11-train-00153-of-00385.parquet": {
+        "size_bytes": 170795608,
+        "etag": "88c3b89d778176b3d4d6fcd2050feed7507e78cbe93129e2cc5f6c0de3f2c6f0",
+        "processed_date": "2025-10-08 20:39:59"
+      },
+      "2024-11-train-00154-of-00385.parquet": {
+        "size_bytes": 169962513,
+        "etag": "65079623f0629c190230ec80077a26166b13139c9aa629262c54253748acd2f0",
+        "processed_date": "2025-10-08 20:40:18"
+      },
+      "2024-11-train-00155-of-00385.parquet": {
+        "size_bytes": 168285095,
+        "etag": "6c0988b9ced11be8ba48d037107939641d6320cb79d5e461159333f5eb0e2a6c",
+        "processed_date": "2025-10-08 20:40:39"
+      },
+      "2024-11-train-00156-of-00385.parquet": {
+        "size_bytes": 168748075,
+        "etag": "f0fb9220a36fa4fd4a391a7e7394a7655afc0a26bcde3af2a3ec8dd12032c94e",
+        "processed_date": "2025-10-08 20:41:00"
+      },
+      "2024-11-train-00157-of-00385.parquet": {
+        "size_bytes": 169700227,
+        "etag": "12f7fb46a16918d2b5948b36f3d9a4c3eaadbb0bec4f1f89030850a58949f687",
+        "processed_date": "2025-10-08 20:41:21"
+      },
+      "2024-11-train-00158-of-00385.parquet": {
+        "size_bytes": 169824864,
+        "etag": "c125f7186c7967dfe5d3994b16263dbc75456debe60c762b66a347c21417317c",
+        "processed_date": "2025-10-08 20:41:42"
+      },
+      "2024-11-train-00159-of-00385.parquet": {
+        "size_bytes": 170117557,
+        "etag": "aaad2411febbf248861bfabb9798f2165ebafe6bc4c140682b2fed7880581009",
+        "processed_date": "2025-10-08 20:42:04"
+      },
+      "2024-11-train-00160-of-00385.parquet": {
+        "size_bytes": 170445683,
+        "etag": "c9df120948fcef3016d49b20934d6adb692ab206c1af8bdf209e10b1d04a3e40",
+        "processed_date": "2025-10-08 20:42:24"
+      },
+      "2024-11-train-00161-of-00385.parquet": {
+        "size_bytes": 170722818,
+        "etag": "54b62adbce3e38d63f94f4e4cd9bf7b031d53ce0bcbf27b45bb18f47435e782c",
+        "processed_date": "2025-10-08 20:42:42"
+      },
+      "2024-11-train-00162-of-00385.parquet": {
+        "size_bytes": 170773129,
+        "etag": "94a8ea287c8033ef13e16afe61c5e05c6353bf81d2523629ae415cfa1bf8192c",
+        "processed_date": "2025-10-08 20:43:03"
+      },
+      "2024-11-train-00163-of-00385.parquet": {
+        "size_bytes": 172271089,
+        "etag": "833395b5e6a1bf2f558d475a6dcc067a17d6e9b6e21f27efbebb5b7ee0bbad6c",
+        "processed_date": "2025-10-08 20:43:25"
+      },
+      "2024-11-train-00164-of-00385.parquet": {
+        "size_bytes": 172615764,
+        "etag": "8e001bae242765a28ca5f82e2ddff9cb29904689e2ddad1f9ebce92bf985ee97",
+        "processed_date": "2025-10-08 20:43:45"
+      },
+      "2024-11-train-00165-of-00385.parquet": {
+        "size_bytes": 172625783,
+        "etag": "f6b45a276bfa1d48c07efa12c37f2408361ff1a18557e3f5256b0754b63c0131",
+        "processed_date": "2025-10-08 20:44:09"
+      },
+      "2024-11-train-00166-of-00385.parquet": {
+        "size_bytes": 172308492,
+        "etag": "93f3b73cc0455e4a97cb9cbe6395d6376edf853aa94422a95e06973c0bab0697",
+        "processed_date": "2025-10-08 20:44:30"
+      },
+      "2024-11-train-00167-of-00385.parquet": {
+        "size_bytes": 171082116,
+        "etag": "aaf02ff80333013fb33c8889002443720c56e0696e325d6f27a078b6144a2b17",
+        "processed_date": "2025-10-08 20:44:55"
+      },
+      "2024-11-train-00168-of-00385.parquet": {
+        "size_bytes": 168942951,
+        "etag": "cf3fc29d5cf55a094bf1c2589e7266634bddeb1fc0d93bb92b0bb9fab66d38bc",
+        "processed_date": "2025-10-08 20:45:16"
+      },
+      "2024-11-train-00169-of-00385.parquet": {
+        "size_bytes": 168243203,
+        "etag": "6409d271534dfaa2be1db97c22d4158603832277d9bfefbb097564e81ab8a886",
+        "processed_date": "2025-10-08 20:45:39"
+      },
+      "2024-11-train-00170-of-00385.parquet": {
+        "size_bytes": 168601030,
+        "etag": "2a1012f500aec5fd2e26392e30ae8e6f47a95b7ba0bbccc6f6c22ebeccf3ae08",
+        "processed_date": "2025-10-08 20:45:59"
+      },
+      "2024-11-train-00171-of-00385.parquet": {
+        "size_bytes": 169040657,
+        "etag": "193044a09b2fd8cb2cebad94023573d635095f3879d3603d68398e1b6ff18214",
+        "processed_date": "2025-10-08 20:46:20"
+      },
+      "2024-11-train-00172-of-00385.parquet": {
+        "size_bytes": 169101475,
+        "etag": "0e412962fa97a4cca0df14c9d6f7a2c8b40e8cca60110682c55205675eeb4af9",
+        "processed_date": "2025-10-08 20:46:41"
+      },
+      "2024-11-train-00173-of-00385.parquet": {
+        "size_bytes": 169693642,
+        "etag": "f00d118982e9be4ca00b1035efc4e934da45e741ec3702cc42c9f21d2df556fb",
+        "processed_date": "2025-10-08 20:47:01"
+      },
+      "2024-11-train-00174-of-00385.parquet": {
+        "size_bytes": 170938611,
+        "etag": "dccb091fc127ee21a0cd93c0eaa46dab1cbee1bad384f3d5bf32d862e30bb722",
+        "processed_date": "2025-10-08 20:47:23"
+      },
+      "2024-11-train-00175-of-00385.parquet": {
+        "size_bytes": 171464448,
+        "etag": "c27a7c2f0eb2c317e9a76809df6b7b10a7f0a707fd792af290c044a5dec27b60",
+        "processed_date": "2025-10-08 20:47:44"
+      },
+      "2024-11-train-00176-of-00385.parquet": {
+        "size_bytes": 174153080,
+        "etag": "082ecc74556d68af9120f77df7c303f064d17289f7fe57f49659dbe8e92101a8",
+        "processed_date": "2025-10-08 20:48:04"
+      },
+      "2024-11-train-00177-of-00385.parquet": {
+        "size_bytes": 175279303,
+        "etag": "2287750158e0ed8844113152a9f12bdd7e56bd9c3951c66c5375c2cb5f6f89c1",
+        "processed_date": "2025-10-08 20:48:26"
+      },
+      "2024-11-train-00178-of-00385.parquet": {
+        "size_bytes": 171379104,
+        "etag": "6801727f79f192deee79dec52d7cf92f585e8bfe6d1f8caa1f3c387175a93f68",
+        "processed_date": "2025-10-08 20:48:46"
+      },
+      "2024-11-train-00179-of-00385.parquet": {
+        "size_bytes": 170207858,
+        "etag": "523b5741db3032bccd8c0ef2627a5f011f04bdc3d2315eb9f82b9e8ed7d3cea7",
+        "processed_date": "2025-10-08 20:49:07"
+      },
+      "2024-11-train-00180-of-00385.parquet": {
+        "size_bytes": 169861722,
+        "etag": "a4a8f072785063c6ea48e4819a1fb1cc99083c08e53d45652c07192a0c8e698c",
+        "processed_date": "2025-10-08 20:49:28"
+      },
+      "2024-11-train-00181-of-00385.parquet": {
+        "size_bytes": 169251667,
+        "etag": "33951282acadeb05aa90a3fb607decac663d5d49413ad6df7a41ce04cce4bb8e",
+        "processed_date": "2025-10-08 20:49:50"
+      },
+      "2024-11-train-00182-of-00385.parquet": {
+        "size_bytes": 169474750,
+        "etag": "e6fab637c32ba8318d5b87bbcb4e681edc5b65db43bceef47157d22133d02493",
+        "processed_date": "2025-10-08 20:50:10"
+      },
+      "2024-11-train-00183-of-00385.parquet": {
+        "size_bytes": 169809013,
+        "etag": "3b899afe83d278997548475f194c4af1effacb9f0ecea74ca326d436bb6bc1f8",
+        "processed_date": "2025-10-08 20:50:33"
+      },
+      "2024-11-train-00184-of-00385.parquet": {
+        "size_bytes": 170284688,
+        "etag": "4f98532bf5922b99f5a2a5ccae744c50109774cd0a7f332e3927d3c6826b41f3",
+        "processed_date": "2025-10-08 20:50:53"
+      },
+      "2024-11-train-00185-of-00385.parquet": {
+        "size_bytes": 169719640,
+        "etag": "d7da36af5205961f420f31f0dc770e82cb7582234bb221472cfd9163e033980e",
+        "processed_date": "2025-10-08 20:51:14"
+      },
+      "2024-11-train-00186-of-00385.parquet": {
+        "size_bytes": 170165616,
+        "etag": "43837dbb6c5813026c7a8a545c941aceedea693af4220516788d25cc20cd25ea",
+        "processed_date": "2025-10-08 20:51:36"
+      },
+      "2024-11-train-00187-of-00385.parquet": {
+        "size_bytes": 170593820,
+        "etag": "8d36de4ed621bd6f42bd2b6ec57f36cc17e9f09677e0f7c62757188e72c9f945",
+        "processed_date": "2025-10-08 20:51:59"
+      },
+      "2024-11-train-00188-of-00385.parquet": {
+        "size_bytes": 172575575,
+        "etag": "13c0200148d706ff0b8f68332e0b9f6a7011f15cc886ddf450e5843937d3a6b1",
+        "processed_date": "2025-10-08 20:52:22"
+      },
+      "2024-11-train-00189-of-00385.parquet": {
+        "size_bytes": 172187626,
+        "etag": "8f07caa17fcec4ef41affb8e9c33b087eb8ebadd399f7cfaa285bef1956b5f47",
+        "processed_date": "2025-10-08 20:52:46"
+      },
+      "2024-11-train-00190-of-00385.parquet": {
+        "size_bytes": 171890595,
+        "etag": "81c72e1195d190d4fe14f45431cf544270932c70aa194a676c5b4789d3a4946c",
+        "processed_date": "2025-10-08 20:53:08"
+      },
+      "2024-11-train-00191-of-00385.parquet": {
+        "size_bytes": 171783075,
+        "etag": "e0271babccb087b2908159da27d793fa89bd33179c855a732cd45b961e850b9b",
+        "processed_date": "2025-10-08 20:53:29"
+      },
+      "2024-11-train-00192-of-00385.parquet": {
+        "size_bytes": 171617471,
+        "etag": "27e9272d17c67deac06f61f4e9ffc8685547c279136e16e84ce1ede12d2f74c5",
+        "processed_date": "2025-10-08 20:53:49"
+      },
+      "2024-11-train-00193-of-00385.parquet": {
+        "size_bytes": 170247192,
+        "etag": "7243205313bb5c1edf362ab46b0a517ecb95dfa73e70e36a6d6629c1cf340960",
+        "processed_date": "2025-10-08 20:54:09"
+      },
+      "2024-11-train-00194-of-00385.parquet": {
+        "size_bytes": 168606469,
+        "etag": "0b899d189d0b46cbc61ab17057945b9dabca8ca8c7a57a2b795fd22a536676a8",
+        "processed_date": "2025-10-08 20:54:30"
+      },
+      "2024-11-train-00195-of-00385.parquet": {
+        "size_bytes": 169877357,
+        "etag": "1f0bb49990f3d261bff450c9646e999e43c11f7eab9ebddee5e225938777c060",
+        "processed_date": "2025-10-08 20:54:53"
+      },
+      "2024-11-train-00196-of-00385.parquet": {
+        "size_bytes": 170679921,
+        "etag": "589c17e02c3ca1c5697a23986a26cc9adc0e63ea4d3fa6c1d63f1580428c1917",
+        "processed_date": "2025-10-08 20:55:13"
+      },
+      "2024-11-train-00197-of-00385.parquet": {
+        "size_bytes": 170479967,
+        "etag": "6edb486c2c1c337c63c8a21f77b166fd93e9e448f16b02c21d8c7920f45a47cb",
+        "processed_date": "2025-10-08 20:55:33"
+      },
+      "2024-11-train-00198-of-00385.parquet": {
+        "size_bytes": 171289814,
+        "etag": "3c64f7017faabb99bbc3cab2ab47149cb262abd2202fbb99b59e4aa2498d7c39",
+        "processed_date": "2025-10-08 20:55:53"
+      },
+      "2024-11-train-00199-of-00385.parquet": {
+        "size_bytes": 171963473,
+        "etag": "b98fa4fcf0d5030d8be2c422280b2c2423c14a86c23289df7e3834001fb62d9c",
+        "processed_date": "2025-10-08 20:56:15"
+      },
+      "2024-11-train-00200-of-00385.parquet": {
+        "size_bytes": 172060676,
+        "etag": "a6954b35f057ceac5a73d65e146af0d3c5694394e73fda623c2b0eb136657bca",
+        "processed_date": "2025-10-08 20:56:35"
+      },
+      "2024-11-train-00201-of-00385.parquet": {
+        "size_bytes": 173162738,
+        "etag": "a873ab7234dfbdddd82eff6566a97eeff10afed5f880f148ac1f391465c96038",
+        "processed_date": "2025-10-08 20:56:54"
+      },
+      "2024-11-train-00202-of-00385.parquet": {
+        "size_bytes": 173394605,
+        "etag": "b22478f8c717ba448026900da529e50a57c677ff672befd5f3ac8a5d9e5e3bee",
+        "processed_date": "2025-10-08 20:57:14"
+      },
+      "2024-11-train-00203-of-00385.parquet": {
+        "size_bytes": 173244945,
+        "etag": "1149a132bb9bd5837cd187273525b20aeabc38c2d45ee148422e81944f20c402",
+        "processed_date": "2025-10-08 20:57:34"
+      },
+      "2024-11-train-00204-of-00385.parquet": {
+        "size_bytes": 172894854,
+        "etag": "fc986bdcc329283ee45f24ec941c683ae0152beae57ea2df25f6763deb503c15",
+        "processed_date": "2025-10-08 20:57:53"
+      },
+      "2024-11-train-00205-of-00385.parquet": {
+        "size_bytes": 170684182,
+        "etag": "c51623962c963c3a9586fbffa759e32eaf96076269aff770703fb3b16bdaabc0",
+        "processed_date": "2025-10-08 20:58:12"
+      },
+      "2024-11-train-00206-of-00385.parquet": {
+        "size_bytes": 169597346,
+        "etag": "8457e44881976661eeed6aa61c1c6a3d8a7b29fe52f67731c07ed571d4420c54",
+        "processed_date": "2025-10-08 20:58:33"
+      },
+      "2024-11-train-00207-of-00385.parquet": {
+        "size_bytes": 170434901,
+        "etag": "041b7e4da70ccd1053b183a09d33fe178e9b5596548f606ee93d2f515cfdad15",
+        "processed_date": "2025-10-08 20:58:53"
+      },
+      "2024-11-train-00208-of-00385.parquet": {
+        "size_bytes": 171034607,
+        "etag": "f9422c25842485b4c2075b33b9c2b97a9712f35d0f3d0124412a27748e6787ab",
+        "processed_date": "2025-10-08 20:59:13"
+      },
+      "2024-11-train-00209-of-00385.parquet": {
+        "size_bytes": 171321581,
+        "etag": "bd8157c8f9bb88a9a0f0ae06747686cf9872e76ca124a117cbe8d138f17dab09",
+        "processed_date": "2025-10-08 20:59:34"
+      },
+      "2024-11-train-00210-of-00385.parquet": {
+        "size_bytes": 171114086,
+        "etag": "7bc29f431b032613041e636151c4d87bc486d8c3df717b99a7e0faad2e3805b8",
+        "processed_date": "2025-10-08 21:00:00"
+      },
+      "2024-11-train-00211-of-00385.parquet": {
+        "size_bytes": 171592522,
+        "etag": "661ddbadfea138a2a4227a82f83be2d60aa5ae4090cbf6200a0b02f82dcbfdae",
+        "processed_date": "2025-10-08 21:00:20"
+      },
+      "2024-11-train-00212-of-00385.parquet": {
+        "size_bytes": 172636407,
+        "etag": "f9efded4c2e668e03c256ffb28eec7c14fe5190daa046adf329d8e8d0389cb2d",
+        "processed_date": "2025-10-08 21:00:42"
+      },
+      "2024-11-train-00213-of-00385.parquet": {
+        "size_bytes": 171647618,
+        "etag": "5c608f3ac1ccbad3a426bab65037016eeb74914a0ec4398fbfa8ed3bddfda17e",
+        "processed_date": "2025-10-08 21:01:03"
+      },
+      "2024-11-train-00214-of-00385.parquet": {
+        "size_bytes": 171715293,
+        "etag": "76e5dc17828577c673f12e9be88719025f6cf6dbc421a8bd7f50f3e5e17c9ecd",
+        "processed_date": "2025-10-08 21:01:24"
+      },
+      "2024-11-train-00215-of-00385.parquet": {
+        "size_bytes": 175583076,
+        "etag": "4978b7b7b936cf249b7de45e2204c9830253e9eb4e09dd9019e2df20db979da2",
+        "processed_date": "2025-10-08 21:01:45"
+      },
+      "2024-11-train-00216-of-00385.parquet": {
+        "size_bytes": 174151796,
+        "etag": "683567ea65d511b3d0a322cdc5f8bec17bf15fdeab27a34fd0537a899c8322c3",
+        "processed_date": "2025-10-08 21:02:05"
+      },
+      "2024-11-train-00217-of-00385.parquet": {
+        "size_bytes": 173638257,
+        "etag": "7318449397b4a85caef654f57d206086c3dbe20329dd28e576eb36d514e9ce96",
+        "processed_date": "2025-10-08 21:02:26"
+      },
+      "2024-11-train-00218-of-00385.parquet": {
+        "size_bytes": 171132387,
+        "etag": "253219d23a9232cff843cb284184ae1e075d052c44e8c81c4e8f82ce1b047cba",
+        "processed_date": "2025-10-08 21:02:47"
+      },
+      "2024-11-train-00219-of-00385.parquet": {
+        "size_bytes": 169373146,
+        "etag": "a656bb94e60718d09591d90fe49c46fe2e4c6f94211334b6c78f8b81741bcb00",
+        "processed_date": "2025-10-08 21:03:10"
+      },
+      "2024-11-train-00220-of-00385.parquet": {
+        "size_bytes": 168516102,
+        "etag": "ebe777dd3110955078e377bbddad9cac5f8ad2a3e8a2390a9404c1b3bb914e89",
+        "processed_date": "2025-10-08 21:03:32"
+      },
+      "2024-11-train-00221-of-00385.parquet": {
+        "size_bytes": 169831525,
+        "etag": "a645cce37e60f50445777384d028c682cf35104fb1a37ea4977b21e78546f699",
+        "processed_date": "2025-10-08 21:03:53"
+      },
+      "2024-11-train-00222-of-00385.parquet": {
+        "size_bytes": 169854713,
+        "etag": "e04fc1bf107a1e6e37ea386d09624b0f61dcbd7ef72504bfc47e2869d046af99",
+        "processed_date": "2025-10-08 21:04:15"
+      },
+      "2024-11-train-00223-of-00385.parquet": {
+        "size_bytes": 169453206,
+        "etag": "03255fa30258aae9ab484552a4fcdceaa9d7fc35d3439b82b830468802db3a54",
+        "processed_date": "2025-10-08 21:04:38"
+      },
+      "2024-11-train-00224-of-00385.parquet": {
+        "size_bytes": 169760672,
+        "etag": "1b50d677da1c8efe6d7ab57f3b2bff26dcbf7805cf90258b3026b704183f8dd8",
+        "processed_date": "2025-10-08 21:05:02"
+      },
+      "2024-11-train-00225-of-00385.parquet": {
+        "size_bytes": 170244280,
+        "etag": "41dba28942d380b809751893e7b63f2f45b161990acb3b112b0c939c8daa84c3",
+        "processed_date": "2025-10-08 21:05:25"
+      },
+      "2024-11-train-00226-of-00385.parquet": {
+        "size_bytes": 171731441,
+        "etag": "7863102c38f2b2fbdad4633b7bcf42cd64bec24d30c454c8fdcb15dae38d1c40",
+        "processed_date": "2025-10-08 21:05:47"
+      },
+      "2024-11-train-00227-of-00385.parquet": {
+        "size_bytes": 172029055,
+        "etag": "7733e620bd5da3845343a91f241ba2c447f0a7ca41a4d839e28eb8d578fc2e65",
+        "processed_date": "2025-10-08 21:06:09"
+      },
+      "2024-11-train-00228-of-00385.parquet": {
+        "size_bytes": 172577135,
+        "etag": "27ed6ae442d7a97a4d10755cf29a8238a6caf2d2cf8c65b1daf598c5c958536f",
+        "processed_date": "2025-10-08 21:06:37"
+      },
+      "2024-11-train-00229-of-00385.parquet": {
+        "size_bytes": 171339239,
+        "etag": "e1d97ce342a5c53d5d7c2e8c69df8ac010fbdc60b3782e684fb86ddfaafd7243",
+        "processed_date": "2025-10-08 21:07:05"
+      },
+      "2024-11-train-00230-of-00385.parquet": {
+        "size_bytes": 171387886,
+        "etag": "3511209812bcf07ef4c7057414fc0f789e14dad3dfdf28b00638254550636d76",
+        "processed_date": "2025-10-08 21:07:30"
+      },
+      "2024-11-train-00231-of-00385.parquet": {
+        "size_bytes": 170595779,
+        "etag": "43fde05e9e558b8ea6bd3378590099349613fec5d20ac952409dfe60990a7e11",
+        "processed_date": "2025-10-08 21:07:52"
+      },
+      "2024-11-train-00232-of-00385.parquet": {
+        "size_bytes": 168219721,
+        "etag": "2aaa7eadb2ceb55a3271e6edacdc1cc0ec432be6907b5060b3e83a04bbe616e4",
+        "processed_date": "2025-10-08 21:08:15"
+      },
+      "2024-11-train-00233-of-00385.parquet": {
+        "size_bytes": 168242454,
+        "etag": "9f37190e836de4e31f472d98e248ca91923151ff88165340e4faadd875109456",
+        "processed_date": "2025-10-08 21:08:38"
+      },
+      "2024-11-train-00234-of-00385.parquet": {
+        "size_bytes": 169299858,
+        "etag": "fef3bd267ef01f44013fe1592b5d586d49699671ba010292ca21087f2f60e3b0",
+        "processed_date": "2025-10-08 21:09:02"
+      },
+      "2024-11-train-00235-of-00385.parquet": {
+        "size_bytes": 169857381,
+        "etag": "2a7867995a2b9bb722d388cd675268823f31e721e19eb030d3838cb30fdfb851",
+        "processed_date": "2025-10-08 21:09:26"
+      },
+      "2024-11-train-00236-of-00385.parquet": {
+        "size_bytes": 169937824,
+        "etag": "36a3e68c9cacbaf7a29880da990c405787baaf594b4230da29e1f28c08b473bf",
+        "processed_date": "2025-10-08 21:09:49"
+      },
+      "2024-11-train-00237-of-00385.parquet": {
+        "size_bytes": 170260453,
+        "etag": "2168c25941d4de3da0eee039d07b5093df8a963b280965b7bb32f254cf26c1f7",
+        "processed_date": "2025-10-08 21:10:12"
+      },
+      "2024-11-train-00238-of-00385.parquet": {
+        "size_bytes": 170902762,
+        "etag": "1d43d23a37ce6f34a71126632c9d95beb3951116e7de3caa1535bccc76aa5a57",
+        "processed_date": "2025-10-08 21:10:35"
+      },
+      "2024-11-train-00239-of-00385.parquet": {
+        "size_bytes": 171305086,
+        "etag": "587b2fd9d967a5f15853bafe1ae161d27c5c003205482438e0c22ffc1d5e49fb",
+        "processed_date": "2025-10-08 21:10:58"
+      },
+      "2024-11-train-00240-of-00385.parquet": {
+        "size_bytes": 172062046,
+        "etag": "70f08552fd610fca87db542fb644c8780199d484d7a71adda59c2d3622735be6",
+        "processed_date": "2025-10-08 21:11:21"
+      },
+      "2024-11-train-00241-of-00385.parquet": {
+        "size_bytes": 172369163,
+        "etag": "d229ea7d3a653002568e32570d1ad29141d86bf4677896bc4999bbfb56b058ff",
+        "processed_date": "2025-10-08 21:11:43"
+      },
+      "2024-11-train-00242-of-00385.parquet": {
+        "size_bytes": 171314209,
+        "etag": "d3d5f02b3f81200113856c2ab1fbd11612854798e947247491c0ed5466917c35",
+        "processed_date": "2025-10-08 21:12:06"
+      },
+      "2024-11-train-00243-of-00385.parquet": {
+        "size_bytes": 171347204,
+        "etag": "4a17d40abeb48c73b41eddb22d23a60067aac667b872e1dab3e78f0858bafa83",
+        "processed_date": "2025-10-08 21:12:29"
+      },
+      "2024-11-train-00244-of-00385.parquet": {
+        "size_bytes": 170542897,
+        "etag": "0d3797c1e54eb16bfd0b3abd7f3b5cd1ca935306138750a2bd88870e2988f3be",
+        "processed_date": "2025-10-08 21:12:52"
+      },
+      "2024-11-train-00245-of-00385.parquet": {
+        "size_bytes": 169138520,
+        "etag": "d8e358d582b279d6e58ea9cbae5e59d8737f1a20627e08a6a00ae8f988fb01ab",
+        "processed_date": "2025-10-08 21:13:16"
+      },
+      "2024-11-train-00246-of-00385.parquet": {
+        "size_bytes": 168517990,
+        "etag": "58fa8521726c392c1f74316772c1bfa094ea42d3147996d72779e9be08c0ec1d",
+        "processed_date": "2025-10-08 21:13:39"
+      },
+      "2024-11-train-00247-of-00385.parquet": {
+        "size_bytes": 168919667,
+        "etag": "ae9d1f48692243a97422088d6207f8b14f7f7d457e140e3a2775667158ae3dc7",
+        "processed_date": "2025-10-08 21:14:03"
+      },
+      "2024-11-train-00248-of-00385.parquet": {
+        "size_bytes": 168947442,
+        "etag": "2016a800d88b93bdde33f5bc440669c8147d17b84a8cf5bc5457f701bb0dcb58",
+        "processed_date": "2025-10-08 21:14:27"
+      },
+      "2024-11-train-00249-of-00385.parquet": {
+        "size_bytes": 169233600,
+        "etag": "b0946aa79e39f16b1b84279c2987ed123a64924068b2a54a146b1b6515e22536",
+        "processed_date": "2025-10-08 21:14:50"
+      }
     }
   },
   "skipped_files": {},
-  "last_updated": "2025-10-08 19:03:13"
+  "last_updated": "2025-10-08 21:14:50"
 }
