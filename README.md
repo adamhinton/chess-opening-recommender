@@ -37,3 +37,9 @@ It will recommend opening sequences that the player is likely to enjoy and score
 
 - Remove openings where one side gets obliterated
   - Otherwise the model will erroneously predict a high (or low) win rate for everyone
+
+### Output
+
+- Maybe make an average_player in the player table
+  - Track the average score for both colors in each opening
+  - Compare predicted opening results to this
