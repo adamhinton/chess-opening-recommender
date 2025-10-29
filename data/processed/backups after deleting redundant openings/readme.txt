@@ -1,0 +1,1 @@
+This is After I accidentally made the whole db a csv, then made it right again. It has already deleted the redundant openings. No other optimiztations yet.

@@ -1,0 +1,1 @@
+This is from when I accidentally converted the whole database to a CSV. This is AFTER deleting redundant openings, and before any other optimisations.
