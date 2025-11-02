@@ -89,3 +89,9 @@ Note that #09_better_downloading.ipynb is the main processing pipeline as of 9.1
 
 Specs for chanigng code:
 Follow my conventions. Helper functions, comments explaining the why more than the what, docstrings, readmes at top of files. Make sure this is all thoroughly documented. When making change, don't say "we made this change", just act like it's always been that way.
+
+Best practices:
+
+- Strongly typed where possible
+- Clear markdown and comments explaining each step
+- Helper functions for long or repeated segments to keep pipeline readable
