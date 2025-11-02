@@ -73,8 +73,7 @@ def setup_database(con: duckdb.DuckDBPyConnection):
         CREATE TABLE IF NOT EXISTS player (
             id   INTEGER PRIMARY KEY DEFAULT nextval('player_id_seq'),
             name VARCHAR UNIQUE,
-            title       VARCHAR,
-            rating      INTEGER
+            title       VARCHAR
         );
     """
     )
