@@ -95,3 +95,4 @@ Best practices:
 - Strongly typed where possible
 - Clear markdown and comments explaining each step
 - Helper functions for long or repeated segments to keep pipeline readable
+- Split up in to separate cells at sensible points
