@@ -1,3 +1,6 @@
+# https://lazyprogrammer.me/recommender-systems-train-test-split/
+# https://medium.com/@sinha.raunak/building-recommendation-systems-part-3-matrix-factorisation-from-scratch-31912a460f9c
+
 # ----------------------------------------------------------------------------------
 # This module provides utility functions for interacting with the DuckDB database
 # that stores all processed chess game statistics. It handles connection management
