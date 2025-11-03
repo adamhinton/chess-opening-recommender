@@ -1,3 +1,5 @@
+EXTREMELY IMPORTANT: IN OUR DATA PROCESSING PIPELINE, USE THE LIBRARIES WE HAVE AVAILABLE. SPECIFICALLY NP AND PANDAS. DON'T JUST MAKE PYTHON OBJECTS. PANDAS IS SO MUCH FASTER FOR ALMOST EVERYTHING WE NEED TO DO.
+
 8.11.2025
 This is the very beginnings of my chess openings recommendation website. I will build an AI model to examine a user's openings and predictopenings that they may enjoy and score well with.
 
