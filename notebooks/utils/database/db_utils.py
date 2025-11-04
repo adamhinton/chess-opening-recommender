@@ -1,5 +1,6 @@
 # https://lazyprogrammer.me/recommender-systems-train-test-split/
 # https://medium.com/@sinha.raunak/building-recommendation-systems-part-3-matrix-factorisation-from-scratch-31912a460f9c
+# https://cran.r-project.org/web/packages/cmfrec/vignettes/cmfrec_vignette.html
 
 # ----------------------------------------------------------------------------------
 # This module provides utility functions for interacting with the DuckDB database
@@ -74,6 +75,7 @@ def setup_database(con: duckdb.DuckDBPyConnection):
             id   INTEGER PRIMARY KEY DEFAULT nextval('player_id_seq'),
             name VARCHAR UNIQUE,
             title       VARCHAR
+            rating     INTEGER
         );
     """
     )
