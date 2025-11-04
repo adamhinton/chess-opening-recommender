@@ -2,6 +2,11 @@
 # https://medium.com/@sinha.raunak/building-recommendation-systems-part-3-matrix-factorisation-from-scratch-31912a460f9c
 # https://cran.r-project.org/web/packages/cmfrec/vignettes/cmfrec_vignette.html
 
+# Vocab:
+# out of sample user or fold-in user, or `online inference for  new user` maybe, or `als fold-in`, or `implicit MF fold-in user`
+# COld start doesn't really apply, it means a new user with no data at all
+# Our web app users have plenty of history, the model just wasn't trained on that history
+
 # ----------------------------------------------------------------------------------
 # This module provides utility functions for interacting with the DuckDB database
 # that stores all processed chess game statistics. It handles connection management
