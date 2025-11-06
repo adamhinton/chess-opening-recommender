@@ -1,5 +1,11 @@
 EXTREMELY IMPORTANT: IN OUR DATA PROCESSING PIPELINE, USE THE LIBRARIES WE HAVE AVAILABLE. SPECIFICALLY NP AND PANDAS. DON'T JUST MAKE PYTHON OBJECTS. PANDAS IS SO MUCH FASTER FOR ALMOST EVERYTHING WE NEED TO DO.
 
+Comments, emojis and prints:
+-This is a professional project.
+-Be extremely limited in your use of emojis. Checkmarks are fine, clocks for time, warning sign for warnings, stuff like that.. No rockets, no smiley faces.
+-Don't comment redudnant stuff. Comments that help understand or denote sections are great. But don't comment # get correlation over df.corr(), for instance
+-Don't print a bunch of useless crap
+
 8.11.2025
 This is the very beginnings of my chess openings recommendation website. I will build an AI model to examine a user's openings and predictopenings that they may enjoy and score well with.
 

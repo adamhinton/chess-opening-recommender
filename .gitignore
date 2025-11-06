@@ -16,3 +16,6 @@ chess_games.db
 copilot-instructions.md
 *.duckdb
 *.db
+*.pt
+copilot-instructions.md
+copilot-instructions.md
