@@ -1,5 +1,7 @@
 EXTREMELY IMPORTANT: IN OUR DATA PROCESSING PIPELINE, USE THE LIBRARIES WE HAVE AVAILABLE. SPECIFICALLY NP AND PANDAS. DON'T JUST MAKE PYTHON OBJECTS. PANDAS IS SO MUCH FASTER FOR ALMOST EVERYTHING WE NEED TO DO.
 
+EXTREMELY IMPORTANT: NO EMOJIS. You can use number emojis to detail which step we're on. That's it.
+
 Comments, emojis and prints:
 -This is a professional project.
 -Be extremely limited in your use of emojis. Checkmarks are fine, clocks for time, warning sign for warnings, stuff like that.. No rockets, no smiley faces.
