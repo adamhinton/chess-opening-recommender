@@ -126,6 +126,7 @@ class PlayerData:
     opening_stats_df: (
         pd.DataFrame
     )  # Opening statistics (see OpeningStatsRow for schema)
+    rating_z: Optional[float] = None  # Z-score normalized rating (added in Step 2.6)
 
     def total_games(self) -> int:
         """Calculate total games across all openings (vectorized)."""
