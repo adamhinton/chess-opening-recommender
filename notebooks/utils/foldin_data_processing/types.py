@@ -44,7 +44,9 @@ class OpeningStatsRow(TypedDict):
     Fields correspond to database schema for player-opening statistics.
     """
 
-    player_id: int  # Database ID of the player
+    player_id: Optional[
+        int
+    ]  # Database ID of the player - doesn't exist on fold-in users and pipeline doesn't expect it; TODO delete this?
     opening_id: int  # Database ID of the opening (not yet remapped to training ID)
     eco: str  # ECO code (e.g., 'C21', 'B02')
     opening_name: str  # Full name of the opening
