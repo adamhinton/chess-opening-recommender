@@ -9,6 +9,8 @@ The pipeline is designed to be:
 - Color-agnostic (handles both White and Black openings)
 - Type-safe (using dataclasses and type hints)
 - Production-ready (proper error handling and logging)
+
+Note, this is a megafile because I defined and tested these functions elsewhere, then combined them here.
 """
 
 from dataclasses import dataclass
